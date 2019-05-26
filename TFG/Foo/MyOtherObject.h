@@ -7,16 +7,16 @@ namespace TFG
 namespace Foo
 {
 
-class MyObject
+class MyOtherObject
 {
 public:
-	MyObject(Foo &, uint32_t const in_Param0);
-	~MyObject();
+	MyOtherObject(Foo &, uint32_t const in_Param0);
+	~MyOtherObject();
 
 	void MyMethod(uint32_t const in_Param0);
 
 private:
-	DISALLOW_COPY_AND_ASSIGN(MyObject);
+	DISALLOW_COPY_AND_ASSIGN(MyOtherObject);
 	Foo &m_Foo;
 };
 

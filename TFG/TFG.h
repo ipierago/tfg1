@@ -34,6 +34,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <map>
 #endif
 
 #define PRIxPTR_WIDTH ((int32_t)(sizeof(uintptr_t) * 2))
@@ -44,6 +45,15 @@
 
 namespace TFG
 {
+
+namespace Foo
+{
+class Foo;
+}
+namespace Bar
+{
+class Bar;
+}
 
 class TFG
 {

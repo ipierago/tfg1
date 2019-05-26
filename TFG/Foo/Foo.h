@@ -8,6 +8,8 @@ namespace Foo
 {
 
 class MyObject;
+class MyOtherObject;
+class IMyOtherObject;
 
 class Foo
 {
