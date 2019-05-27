@@ -12,11 +12,13 @@ class MyObject;
 class Bar
 {
 public:
-    Bar(::TFG::TFG &, uint32_t const in_Param0);
+    Bar(uint32_t const in_Param0);
     ~Bar();
 
 private:
     DISALLOW_COPY_AND_ASSIGN(Bar);
+
+    static uint32_t s_Param0;
 };
 
 } // namespace Bar

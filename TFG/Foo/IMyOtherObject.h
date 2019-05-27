@@ -10,7 +10,7 @@ namespace Foo
 class IMyOtherObject
 {
 public:
-	IMyOtherObject(Foo &, uint32_t const in_Param0);
+	IMyOtherObject(uint32_t const in_Param0);
 	~IMyOtherObject();
 
 	void MyMethod(uint32_t const in_Param0);

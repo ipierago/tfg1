@@ -14,11 +14,15 @@ class IMyOtherObject;
 class Foo
 {
 public:
-    Foo(::TFG::TFG &, uint32_t const in_Param0);
+    Foo(uint32_t const in_Param0);
     ~Foo();
 
 private:
-    DISALLOW_COPY_AND_ASSIGN(Foo);
+    static uint32_t s_Param0;
+
+    friend class MyObject;
+    friend class MyOtherObject;
+    friend class IMyOtherObject;
 };
 
 } // namespace Foo

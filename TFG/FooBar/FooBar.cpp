@@ -16,14 +16,14 @@ namespace FooBar
 int Main()
 {
     ::TFG::TFG s_TFG(0);
-    Foo::Foo s_Foo(s_TFG, 0);
-    Bar::Bar s_Bar(s_TFG, 0);
+    Foo::Foo s_Foo(0);
+    Bar::Bar s_Bar(0);
     {
-        Foo::MyObject s_MyObject(s_Foo, 0);
-        Foo::IMyOtherObject s_IMyOtherObject(s_Foo, 0);
+        Foo::MyObject s_MyObject(0);
+        Foo::IMyOtherObject s_IMyOtherObject(0);
     }
     {
-        Bar::MyObject s_MyObject(s_Bar, 0);
+        Bar::MyObject s_MyObject(0);
     }
     return 0;
 }

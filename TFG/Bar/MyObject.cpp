@@ -7,7 +7,7 @@ namespace TFG
 namespace Bar
 {
 
-MyObject::MyObject(Bar &in_Bar, uint32_t const in_Param0)
+MyObject::MyObject(uint32_t const in_Param0) : m_Param0(in_Param0)
 {
 }
 
