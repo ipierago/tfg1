@@ -14,8 +14,10 @@ namespace NetNT
 
 Packet::Packet()
 {
+	STD_FUNC_ENTER();
 	net_overlapped_ex.overlapped.hEvent = call_CreateEventA(NULL, FALSE, FALSE, NULL);
 	STD_ASSERT(net_overlapped_ex.overlapped.hEvent);
+	STD_FUNC_EXIT("");
 }
 
 Packet::~Packet()
