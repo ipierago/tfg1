@@ -23,9 +23,11 @@ int main()
         SetThreadpoolThreadMaximum(ptp_pool, max_thread_count);
         SetThreadpoolCallbackPool(&tp_callback_environ, ptp_pool);
         {
-            TFG::NetNT::Init(&tp_callback_environ, 6, BUFFER_BLOCK_SIZE);
-            // Do some stuff
-            TFG::NetNT::Deinit();
+            if (SUCCEEDED(TFG::NetNT::Init(&tp_callback_environ, 6, BUFFER_BLOCK_SIZE)))
+            {
+                // Do some stuff
+                TFG::NetNT::Deinit();
+            }
         }
         CloseThreadpool(ptp_pool);
         DestroyThreadpoolEnvironment(&tp_callback_environ);
