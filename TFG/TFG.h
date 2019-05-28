@@ -221,3 +221,4 @@ private:
 #define call_closesocket ::closesocket
 #define call_WaitForThreadpoolIoCallbacks ::WaitForThreadpoolIoCallbacks
 #define call_CloseThreadpoolIo ::CloseThreadpoolIo
+#define call_CreateThreadpool ::CreateThreadpool

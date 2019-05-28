@@ -19,7 +19,7 @@ typedef struct OverlappedEx *OverlappedExPtr;
 class NetNT
 {
 public:
-    NetNT(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_packet_buffer_size);
+    NetNT(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_num_threads, uint32_t const in_packet_buffer_size);
     ~NetNT();
 
 private:

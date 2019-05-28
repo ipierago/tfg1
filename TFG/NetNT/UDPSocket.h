@@ -10,19 +10,25 @@ namespace NetNT
 class UDPSocket
 {
 public:
-	class ICallback
+	class CallbackI
 	{
 	public:
-		virtual ~ICallback() {}
 		virtual void OnRecvPacket(UDPSocketPtr const in_net_udpsocket_p, PacketPtr const in_net_packet_p) = 0;
 		virtual void OnSendComplete(UDPSocketPtr const in_net_udpsocket_p, PacketPtr const in_net_packet_p, TFG_Result const in_result) = 0;
 		virtual void OnError(UDPSocketPtr const in_net_udpsocket_p, TFG_Result const in_hr) = 0;
+
+	protected:
+		CallbackI() {}
+		virtual ~CallbackI() {}
+	
+	private:
+		DISALLOW_COPY_AND_ASSIGN(CallbackI);
 	};
-	typedef ICallback *ICallbackPtr;
+	typedef CallbackI *CallbackIPtr;
 
 	static const TFG_TypeId TypeId;
 
-	static UDPSocketPtr Create(const char *const in_pszAddress, int32_t const in_Port, ICallbackPtr const in_net_udpsocket_callback_i, uint32_t const in_num_pending_receive_calls, uint32_t const in_max_receive_packet_size);
+	static UDPSocketPtr Create(const char *const in_pszAddress, int32_t const in_Port, CallbackIPtr const in_net_udpsocket_callback_i, uint32_t const in_num_pending_receive_calls, uint32_t const in_max_receive_packet_size);
 	void Destroy();
 	TFG_Result SendPacket(PacketPtr const in_net_packet, const struct sockaddr_in *const in_sockaddr_in_p);
 
@@ -32,7 +38,7 @@ public:
 private:
 	UDPSocket();
 	~UDPSocket();
-	TFG_Result Init(const char *const in_AddressPsz, int32_t const in_Port, ICallbackPtr const in_udpSocketCallbackI, uint32_t const in_numPendingReceiveCalls, uint32_t const in_maxReceivePacketSize);
+	TFG_Result Init(const char *const in_AddressPsz, int32_t const in_Port, CallbackIPtr const in_udpSocketCallbackI, uint32_t const in_numPendingReceiveCalls, uint32_t const in_maxReceivePacketSize);
 	void Deinit();
 
 	int32_t m_numPendingOverlapped;
@@ -40,7 +46,7 @@ private:
 
 	SOCKET m_socket;
 
-	ICallbackPtr m_udpSocketCallbackI;
+	CallbackIPtr m_udpSocketCallbackI;
 
 	PTP_IO m_ptpIo;
 

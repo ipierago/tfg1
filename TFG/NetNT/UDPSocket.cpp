@@ -201,7 +201,7 @@ finally:
 	return rv;
 }
 
-UDPSocketPtr UDPSocket::Create(const char *const in_pszAddress, int32_t const in_Port, ICallbackPtr const in_netUDPSocketCallbackI, uint32_t const in_num_pending_receive_calls, uint32_t const in_max_receive_packet_size)
+UDPSocketPtr UDPSocket::Create(const char *const in_pszAddress, int32_t const in_Port, CallbackIPtr const in_netUDPSocketCallbackI, uint32_t const in_num_pending_receive_calls, uint32_t const in_max_receive_packet_size)
 {
 	TFG_FUNC_ENTER();
 	UDPSocketPtr rv = 0;
@@ -222,7 +222,7 @@ finally:
 	return rv;
 }
 
-TFG_Result UDPSocket::Init(const char *const in_AddressPsz, int32_t const in_Port, ICallbackPtr const in_udpSocketCallbackI, uint32_t const in_numPendingReceiveCalls, uint32_t const in_maxReceivePacketSize)
+TFG_Result UDPSocket::Init(const char *const in_AddressPsz, int32_t const in_Port, CallbackIPtr const in_udpSocketCallbackI, uint32_t const in_numPendingReceiveCalls, uint32_t const in_maxReceivePacketSize)
 {
 	TFG_FUNC_ENTER();
 	TFG_Result rv = E_FAIL;
