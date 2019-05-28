@@ -1,9 +1,12 @@
 #include <TFG/NetNT/NetNT.h>
+#include <gtest/gtest.h>
 
 #define BUFFER_BLOCK_SIZE 512
 
-int main()
+int NetNT_Test_InitAndDeinit()
 {
+    int rv = -1;
+
     TFG_Init();
     TFG_SetGlobalLevelLog(TFG_Level_Debug);
 
@@ -26,6 +29,8 @@ int main()
             if (SUCCEEDED(TFG::NetNT::Init(&tp_callback_environ, 6, BUFFER_BLOCK_SIZE)))
             {
                 // Do some stuff
+
+                rv = 0;
                 TFG::NetNT::Deinit();
             }
         }
@@ -35,5 +40,10 @@ int main()
 
     TFG_Deinit();
 
-    return 0;
+    return rv;
+}
+
+TEST(NetNT_Test, InitAndDeinit)
+{
+    EXPECT_EQ(NetNT_Test_InitAndDeinit(), 0);
 }

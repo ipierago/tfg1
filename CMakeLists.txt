@@ -14,12 +14,15 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 ## Make sure shared libraries end up next to executables
 ## TODO: Is this needed with static link?
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Always include the root folder
-# TODO: Should this be pushed into modules?
 include_directories ("${PROJECT_SOURCE_DIR}")
 
-# Subdirectories
+# dependencies subdirectories
+add_subdirectory(googletest)
+
+# subdirectories
 add_subdirectory(TFG)
+
