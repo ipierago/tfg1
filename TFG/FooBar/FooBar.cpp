@@ -15,7 +15,8 @@ namespace FooBar
 
 int Main()
 {
-    TFG s_TFG;
+    TFG_Init();
+    TFG_SetGlobalLevelLog(TFG_Level_Debug);
     Foo::Foo s_Foo(0);
     Bar::Bar s_Bar(0);
     {
@@ -25,6 +26,7 @@ int Main()
     {
         Bar::MyObject s_MyObject(0);
     }
+    TFG_Deinit();
     return 0;
 }
 

@@ -4,7 +4,8 @@
 
 int main()
 {
-    ::TFG::TFG s_TFG;
+    TFG_Init();
+    TFG_SetGlobalLevelLog(TFG_Level_Debug);
 
     TP_CALLBACK_ENVIRON tp_callback_environ;
     InitializeThreadpoolEnvironment(&tp_callback_environ);
@@ -22,13 +23,15 @@ int main()
         SetThreadpoolThreadMaximum(ptp_pool, max_thread_count);
         SetThreadpoolCallbackPool(&tp_callback_environ, ptp_pool);
         {
-            TFG::NetNT::NetNT_Init(&tp_callback_environ, 6, BUFFER_BLOCK_SIZE);
+            TFG::NetNT::Init(&tp_callback_environ, 6, BUFFER_BLOCK_SIZE);
             // Do some stuff
-            TFG::NetNT::NetNT_Deinit();
+            TFG::NetNT::Deinit();
         }
         CloseThreadpool(ptp_pool);
         DestroyThreadpoolEnvironment(&tp_callback_environ);
     }
+
+    TFG_Deinit();
 
     return 0;
 }

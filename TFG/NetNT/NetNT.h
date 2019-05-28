@@ -16,13 +16,10 @@ typedef class UDPSocket *UDPSocketPtr;
 struct OverlappedEx;
 typedef struct OverlappedEx *OverlappedExPtr;
 
-TFG_Result						NetNT_Init									(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_num_threads, uint32_t const in_packet_buffer_size);
-void							NetNT_Deinit								();
-uint32_t						NetNT_GetPacketBufferSize					();
-
-
-uint32_t NetNT_CopyBufferToWSABufArray(void const *const in_src_p, uint32_t const in_src_size, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset);
-
+TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_num_threads, uint32_t const in_packet_buffer_size);
+void Deinit();
+uint32_t GetPacketBufferSize();
+uint32_t CopyBufferToWSABufArray(void const *const in_src_p, uint32_t const in_src_size, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset);
 } // namespace NetNT
 
 } // namespace TFG

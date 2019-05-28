@@ -180,7 +180,7 @@ uint32_t Packet::AppendData(void const *const in_src_p, uint32_t const in_size)
 
 	uint32_t wsabuf_array_size = 0;
 	WSABUF const *const wsabuf_array = GetWSABufArray(&wsabuf_array_size);
-	num_bytes_copied = NetNT_CopyBufferToWSABufArray(in_src_p, in_size, wsabuf_array, wsabuf_array_size, old_size);
+	num_bytes_copied = CopyBufferToWSABufArray(in_src_p, in_size, wsabuf_array, wsabuf_array_size, old_size);
 
 finally:
 	TFG_FUNC_EXIT("");

@@ -190,19 +190,3 @@ extern "C"
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
     TypeName(const TypeName &);            \
     void operator=(const TypeName &)
-
-#ifdef __cplusplus
-namespace TFG
-{
-
-class TFG
-{
-public:
-    TFG();
-    ~TFG();
-
-private:
-    DISALLOW_COPY_AND_ASSIGN(TFG);
-};
-} // namespace TFG
-#endif

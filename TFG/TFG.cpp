@@ -279,18 +279,3 @@ const char *TFG_LevelToStringShort(TFG_Level const in_level)
         return "unknown";
     }
 }
-
-namespace TFG
-{
-
-TFG::TFG()
-{
-    TFG_Init();
-}
-
-TFG::~TFG()
-{
-    TFG_Deinit();
-}
-
-} // namespace TFG

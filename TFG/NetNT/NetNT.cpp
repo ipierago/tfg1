@@ -12,7 +12,6 @@ namespace TFG
 namespace NetNT
 {
 
-Globals g_net_globals;
 int32_t g_net_init_count = 0;
 
 typedef struct net_t
@@ -21,6 +20,8 @@ typedef struct net_t
 	HANDLE *thread_handles_p;
 } net_t;
 static net_t g_net;
+
+Globals g_net_globals;
 
 DWORD WINAPI net_iocp_completion_port_thread_main(LPVOID in_pv)
 {
@@ -93,7 +94,7 @@ finally:
 	return rv;
 }
 
-TFG_Result NetNT_Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_num_threads, uint32_t const in_packet_buffer_size)
+TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_num_threads, uint32_t const in_packet_buffer_size)
 {
 	TFG_FUNC_ENTER();
 	TFG_Result rv = E_FAIL;
@@ -120,7 +121,7 @@ TFG_Result NetNT_Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32
 		for (uint32_t i = 0; i < in_num_threads; ++i)
 		{
 			DWORD ignored = 0;
-			TFG_CHECK((g_net.thread_handles_p[i] = call_CreateThread(NULL, 0, net_iocp_completion_port_thread_main, NULL, 0, &ignored)) != 0);
+			TFG_CHECK((g_net.thread_handles_p[i] = call_CreateThread(NULL, 0, TFG::NetNT::net_iocp_completion_port_thread_main, NULL, 0, &ignored)) != 0);
 		}
 	}
 
@@ -128,12 +129,12 @@ TFG_Result NetNT_Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32
 	rv = S_OK;
 finally:
 	if (FAILED(rv))
-		NetNT_Deinit();
+		Deinit();
 	TFG_FUNC_EXIT("");
 	return rv;
 }
 
-void NetNT_Deinit()
+void Deinit()
 {
 	TFG_FUNC_ENTER();
 
@@ -164,7 +165,7 @@ void NetNT_Deinit()
 	TFG_FUNC_EXIT("");
 }
 
-TFG_Result NetNT_InitSockAddrIn(struct sockaddr_in *const in_sockaddr_in_p, const char *const in_address_p, int32_t const in_port)
+TFG_Result InitSockAddrIn(struct sockaddr_in *const in_sockaddr_in_p, const char *const in_address_p, int32_t const in_port)
 {
 	in_sockaddr_in_p->sin_family = AF_INET;
 	in_sockaddr_in_p->sin_port = htons((u_short)in_port);
@@ -172,12 +173,12 @@ TFG_Result NetNT_InitSockAddrIn(struct sockaddr_in *const in_sockaddr_in_p, cons
 	return S_OK;
 }
 
-uint32_t NetNT_GetPacketBufferSize()
+uint32_t GetPacketBufferSize()
 {
 	return g_net_globals.packet_buffer_size;
 }
 
-uint32_t NetNT_CopyWSABufArrayToWSABufArray(WSABUF const *const in_src_wsabuf_array, uint32_t const in_src_wsabuf_array_size, uint32_t const in_src_offset, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset, uint32_t const in_count)
+uint32_t CopyWSABufArrayToWSABufArray(WSABUF const *const in_src_wsabuf_array, uint32_t const in_src_wsabuf_array_size, uint32_t const in_src_offset, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset, uint32_t const in_count)
 {
 	TFG_FUNC_ENTER();
 	uint32_t num_bytes_copied = 0;
@@ -244,7 +245,7 @@ uint32_t NetNT_CopyWSABufArrayToWSABufArray(WSABUF const *const in_src_wsabuf_ar
 	return num_bytes_copied;
 }
 
-uint32_t NetNT_CopyBufferToWSABufArray(void const *const in_src_p, uint32_t const in_src_size, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset)
+uint32_t CopyBufferToWSABufArray(void const *const in_src_p, uint32_t const in_src_size, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset)
 {
 	uint32_t num_bytes_copied = 0;
 
@@ -287,5 +288,4 @@ uint32_t NetNT_CopyBufferToWSABufArray(void const *const in_src_p, uint32_t cons
 }
 
 } // namespace NetNT
-
 } // namespace TFG
