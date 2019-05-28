@@ -206,19 +206,3 @@ private:
 };
 } // namespace TFG
 #endif
-
-#define call_CloseHandle ::CloseHandle
-#define call_CreateEventA ::CreateEventA
-#define call_CreateThreadpoolIo ::CreateThreadpoolIo
-#define call_StartThreadpoolIo ::StartThreadpoolIo
-#define call_CancelThreadpoolIo ::CancelThreadpoolIo
-#define call_WSARecvFrom ::WSARecvFrom
-#define call_WSAGetOverlappedResult ::WSAGetOverlappedResult
-#define call_WSASendTo ::WSASendTo
-#define call_WSASocketA ::WSASocketA
-#define call_bind ::bind
-#define call_CreateIoCompletionPort ::CreateIoCompletionPort
-#define call_closesocket ::closesocket
-#define call_WaitForThreadpoolIoCallbacks ::WaitForThreadpoolIoCallbacks
-#define call_CloseThreadpoolIo ::CloseThreadpoolIo
-#define call_CreateThreadpool ::CreateThreadpool
