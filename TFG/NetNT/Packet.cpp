@@ -1,7 +1,7 @@
 #include "NetNT.h"
 #include "Packet.h"
 
-STD_FILE_SETUP()
+TFG_FILE_SETUP()
 
 #define NET_PACKET_THREAD_GLOBALS_FREE_LIST_HIGH_WATER 256
 #define NET_PACKET_THREAD_GLOBALS_FREE_BUFFERS_HIGH_WATER 256
@@ -14,10 +14,10 @@ namespace NetNT
 
 Packet::Packet()
 {
-	STD_FUNC_ENTER();
+	TFG_FUNC_ENTER();
 	net_overlapped_ex.overlapped.hEvent = call_CreateEventA(NULL, FALSE, FALSE, NULL);
-	STD_ASSERT(net_overlapped_ex.overlapped.hEvent);
-	STD_FUNC_EXIT("");
+	TFG_ASSERT(net_overlapped_ex.overlapped.hEvent);
+	TFG_FUNC_EXIT("");
 }
 
 Packet::~Packet()
@@ -51,10 +51,10 @@ Packet::ThreadGlobals &Packet::ThreadGlobals::Instance()
 }
 
 // Does not preserve contents
-StdResult Packet::Resize(int32_t const size)
+TFG_Result Packet::Resize(int32_t const size)
 {
-	STD_FUNC_ENTER();
-	StdResult rv = E_FAIL;
+	TFG_FUNC_ENTER();
+	TFG_Result rv = E_FAIL;
 
 	uint32_t buffer_index = 0;
 	uint32_t remaining_bytes = size;
@@ -73,7 +73,7 @@ StdResult Packet::Resize(int32_t const size)
 			{
 				buffer_p = new CHAR[NetNT::packet_buffer_size];
 			}
-			STD_ASSERT(buffer_p);
+			TFG_ASSERT(buffer_p);
 			WSABUF wsabuf;
 			wsabuf.buf = (CHAR *)buffer_p;
 			wsabuf.len = std::min(remaining_bytes, NetNT::packet_buffer_size);
@@ -106,13 +106,13 @@ StdResult Packet::Resize(int32_t const size)
 
 	rv = S_OK;
 	//finally:
-	STD_FUNC_EXIT("");
+	TFG_FUNC_EXIT("");
 	return rv;
 }
 
 Packet *Packet::Create()
 {
-	STD_FUNC_ENTER();
+	TFG_FUNC_ENTER();
 	Packet *rv = 0;
 
 	Packet *net_packet_p = 0;
@@ -138,7 +138,7 @@ Packet *Packet::Create()
 	//finally:
 	if ((rv == 0 && net_packet_p))
 		net_packet_p->Release();
-	STD_FUNC_EXIT("return 0x%0*" PRIxPTR, PRIxPTR_WIDTH, rv);
+	TFG_FUNC_EXIT("return 0x%0*" PRIxPTR, PRIxPTR_WIDTH, rv);
 	return rv;
 }
 
@@ -165,25 +165,25 @@ uint32_t Packet::ComputeSize() const
 
 uint32_t Packet::AppendData(void const *const in_src_p, uint32_t const in_size)
 {
-	STD_FUNC_ENTER();
+	TFG_FUNC_ENTER();
 	uint32_t num_bytes_copied = 0;
 
 	uint32_t const old_size = ComputeSize();
 	uint32_t const new_size = old_size + in_size;
-	STD_CHECK(SUCCEEDED(Resize(new_size)));
+	TFG_CHECK(SUCCEEDED(Resize(new_size)));
 
 	uint32_t wsabuf_array_size = 0;
 	WSABUF const *const wsabuf_array = GetWSABufArray(&wsabuf_array_size);
 	num_bytes_copied = CopyBufferToWSABufArray(in_src_p, in_size, wsabuf_array, wsabuf_array_size, old_size);
 
 finally:
-	STD_FUNC_EXIT("");
+	TFG_FUNC_EXIT("");
 	return num_bytes_copied;
 }
 
 uint32_t Packet::GetData(void *const in_dest_p, uint32_t const in_capacity)
 {
-	STD_FUNC_ENTER();
+	TFG_FUNC_ENTER();
 	uint32_t num_bytes_copied = 0;
 
 	uint32_t const wsabuf_count = wsabuf_vec.size();
@@ -200,20 +200,20 @@ uint32_t Packet::GetData(void *const in_dest_p, uint32_t const in_capacity)
 	}
 
 	//finally:
-	STD_FUNC_EXIT("");
+	TFG_FUNC_EXIT("");
 	return num_bytes_copied;
 }
 
 void Packet::on_zero_interface_ref_count()
 {
-	STD_FUNC_ENTER();
+	TFG_FUNC_ENTER();
 
-	STD_FUNC_EXIT("");
+	TFG_FUNC_EXIT("");
 }
 
 void Packet::on_zero_object_ref_count()
 {
-	STD_FUNC_ENTER();
+	TFG_FUNC_ENTER();
 	ThreadGlobals &threadGlobals = ThreadGlobals::Instance();
 
 	Resize(0);
@@ -228,7 +228,7 @@ void Packet::on_zero_object_ref_count()
 
 	InterlockedDecrement64(&NetNT::num_packets_in_use);
 
-	STD_FUNC_EXIT("");
+	TFG_FUNC_EXIT("");
 }
 
 int32_t Packet::AddRef()

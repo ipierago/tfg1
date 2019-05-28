@@ -23,7 +23,7 @@ public:
         *out_array_size = wsabuf_vec.size();
         return (WSABUF const *)&wsabuf_vec.at(0);
     }
-    StdResult Resize(int32_t const size);
+    TFG_Result Resize(int32_t const size);
     uint32_t ComputeSize() const;
     uint32_t AppendData(void const *const in_src_p, uint32_t const in_size);
     uint32_t GetData(void *const in_dest_p, uint32_t const in_capacity);

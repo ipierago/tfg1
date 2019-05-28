@@ -15,7 +15,7 @@ namespace FooBar
 
 int Main()
 {
-    ::TFG::TFG s_TFG(0);
+    TFG s_TFG;
     Foo::Foo s_Foo(0);
     Bar::Bar s_Bar(0);
     {

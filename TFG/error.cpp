@@ -1,7 +1,7 @@
 #include "TFG.h"
 #include "error.h"
 
-char const *Std_GetErrorString(uint32_t const in_error_code)
+char const *TFG_GetErrorString(uint32_t const in_error_code)
 {
 #ifdef _MSVC_VER
 	static char buf[512];
@@ -13,11 +13,11 @@ char const *Std_GetErrorString(uint32_t const in_error_code)
 	}
 	return buf;
 #else
-	return Std_ResultToStringShort(in_error_code);
+	return TFG_ResultToStringShort(in_error_code);
 #endif
 }
 
-const char *Std_ResultToStringShort(StdResult const in_hr)
+const char *TFG_ResultToStringShort(TFG_Result const in_hr)
 {
 	switch (in_hr)
 	{
@@ -30,7 +30,7 @@ const char *Std_ResultToStringShort(StdResult const in_hr)
 	}
 }
 
-const char *Std_WSAErrorToStringShort(int32_t const in_wsaerror)
+const char *TFG_WSAErrorToStringShort(int32_t const in_wsaerror)
 {
 	switch (in_wsaerror)
 	{
