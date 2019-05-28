@@ -7,8 +7,14 @@ namespace TFG
 namespace NetNT
 {
 
+class Globals;
+typedef class Globals *GlobalsPtr;
 class Packet;
-class IPacket;
+typedef class Packet *PacketPtr;
+class UDPSocket;
+typedef class UDPSocket *UDPSocketPtr;
+struct OverlappedEx;
+typedef struct OverlappedEx *OverlappedExPtr;
 
 class NetNT
 {
@@ -18,17 +24,9 @@ public:
 
 private:
     DISALLOW_COPY_AND_ASSIGN(NetNT);
-
-    static PTP_CALLBACK_ENVIRON ptp_callback_environ;
-    static uint32_t packet_buffer_size;
-	static HANDLE						iocp_h;
-	static volatile int64_t			num_packets_in_use;
-
-
-    friend class Packet;
 };
 
-uint32_t CopyBufferToWSABufArray(void const * const in_src_p, uint32_t const in_src_size, WSABUF const * const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset);
+uint32_t CopyBufferToWSABufArray(void const *const in_src_p, uint32_t const in_src_size, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset);
 
 } // namespace NetNT
 

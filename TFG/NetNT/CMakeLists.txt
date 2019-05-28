@@ -3,12 +3,16 @@ set(MY_NAME TFG_NetNT)
 set(SOURCE
   NetNT.cpp
   Packet.cpp
+  UDPSocket.cpp
+  Globals.cpp
 )
 
 set(HEADERS
   NetNT.h
   OverlappedEx.h
   Packet.h
+  UDPSocket.h
+  Globals.h
 )
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})

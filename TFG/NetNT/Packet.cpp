@@ -1,5 +1,6 @@
 #include "NetNT.h"
 #include "Packet.h"
+#include "Globals.h"
 
 TFG_FILE_SETUP()
 
@@ -11,6 +12,11 @@ namespace TFG
 
 namespace NetNT
 {
+
+#pragma warning(push)
+#pragma warning(disable : 4307)
+TFG_TypeId Packet::TypeId = TFG_DJB2_16('e', 'z', 'n', 't', '_', 'u', 'd', 'p', 'p', 'a', 'c', 'k', 'e', 't', '_', 't');
+#pragma warning(pop)
 
 Packet::Packet()
 {
@@ -71,19 +77,19 @@ TFG_Result Packet::Resize(int32_t const size)
 			}
 			else
 			{
-				buffer_p = new CHAR[NetNT::packet_buffer_size];
+				buffer_p = new CHAR[g_net_globals.packet_buffer_size];
 			}
 			TFG_ASSERT(buffer_p);
 			WSABUF wsabuf;
 			wsabuf.buf = (CHAR *)buffer_p;
-			wsabuf.len = std::min(remaining_bytes, NetNT::packet_buffer_size);
+			wsabuf.len = std::min(remaining_bytes, g_net_globals.packet_buffer_size);
 			wsabuf_vec.push_back(wsabuf);
 			remaining_bytes -= wsabuf.len;
 		}
 		else
 		{
 			WSABUF &wsabuf = wsabuf_vec.at(buffer_index);
-			wsabuf.len = std::min(remaining_bytes, NetNT::packet_buffer_size);
+			wsabuf.len = std::min(remaining_bytes, g_net_globals.packet_buffer_size);
 			remaining_bytes -= wsabuf.len;
 		}
 		++buffer_index;
@@ -131,7 +137,7 @@ Packet *Packet::Create()
 	net_packet_p->interface_ref_count = 1;
 	net_packet_p->object_ref_count = 1;
 
-	InterlockedIncrement64(&NetNT::num_packets_in_use);
+	InterlockedIncrement64(&g_net_globals.num_packets_in_use);
 
 	rv = net_packet_p;
 
@@ -226,7 +232,7 @@ void Packet::on_zero_object_ref_count()
 		delete this;
 	}
 
-	InterlockedDecrement64(&NetNT::num_packets_in_use);
+	InterlockedDecrement64(&g_net_globals.num_packets_in_use);
 
 	TFG_FUNC_EXIT("");
 }

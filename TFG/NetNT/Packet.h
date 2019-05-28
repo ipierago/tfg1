@@ -17,7 +17,8 @@ public:
     OverlappedEx const *GetOverlappedExPtr() const { return &net_overlapped_ex; }
     struct sockaddr_in *GetSockAddrInPtr() { return &remote_sockaddr_in; }
     struct sockaddr_in const *GetSockAddrInPtr() const { return &remote_sockaddr_in; }
-    int32_t const *GetSockaddrInLenPtr() const { return &remote_sockaddr_in_len; }
+    int32_t *GetSockAddrInLenPtr() { return &remote_sockaddr_in_len; }
+    int32_t const *GetSockAddrInLenPtr() const { return &remote_sockaddr_in_len; }
     WSABUF const *GetWSABufArray(uint32_t *const out_array_size) const
     {
         *out_array_size = wsabuf_vec.size();
@@ -30,6 +31,11 @@ public:
 
     static Packet *Packet::Create();
 
+    int32_t add_ref_object();
+    int32_t release_object();
+
+    static TFG_TypeId TypeId;
+
 private:
     DISALLOW_COPY_AND_ASSIGN(Packet);
 
@@ -38,8 +44,6 @@ private:
 
     void on_zero_interface_ref_count();
     void on_zero_object_ref_count();
-    int32_t add_ref_object();
-    int32_t release_object();
 
     volatile int32_t object_ref_count;
     volatile int32_t interface_ref_count;
