@@ -21,4 +21,4 @@ target_link_libraries(${MY_NAME} TFG)
 
 add_precompiled_header(${MY_NAME} NetNT.h)
 
-add_subdirectory(Test)
+add_subdirectory(tests)

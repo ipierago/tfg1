@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-set (MY_NAME TFG_NetNT_Test)
+set (MY_NAME TFG_NetNT_tests)
 
 set(SOURCE
-  main.cpp
+  tests.cpp
 )
 
 set(HEADERS
