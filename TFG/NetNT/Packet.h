@@ -22,7 +22,7 @@ public:
     WSABUF const *GetWSABufArray(uint32_t *const out_array_size) const
     {
         *out_array_size = wsabuf_vec.size();
-        return (WSABUF const *)&wsabuf_vec.at(0);
+        return (wsabuf_vec.empty() ? 0 : (WSABUF const *)&wsabuf_vec.at(0));
     }
     TFG_Result Resize(int32_t const size);
     uint32_t ComputeSize() const;

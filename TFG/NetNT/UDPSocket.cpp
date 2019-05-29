@@ -286,7 +286,7 @@ void UDPSocket::Destroy()
 	delete this;
 }
 
-UDPSocket::UDPSocket()
+UDPSocket::UDPSocket() : m_numPendingOverlapped(0), m_maxReceivePacketSize(0), m_socket(0), m_udpSocketCallbackI(0), m_ptpIo(0)
 {
 }
 UDPSocket::~UDPSocket()
