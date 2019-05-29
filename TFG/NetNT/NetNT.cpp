@@ -156,9 +156,14 @@ void Deinit()
 		g_net.thread_handles_p = 0;
 	}
 	if (g_net_globals.iocp_h)
+	{
 		TFG_CHECK_NO_GOTO(call_CloseHandle(g_net_globals.iocp_h));
+		g_net_globals.iocp_h = 0;
+	}
 
 	net_globals_deinit(&g_net_globals);
+
+	InterlockedDecrement((LPLONG)&g_net_init_count);
 
 	TFG_DEBUG("net successfully shutdown");
 
@@ -209,7 +214,7 @@ uint32_t CopyWSABufArrayToWSABufArray(WSABUF const *const in_src_wsabuf_array, u
 			dest_index_this_buffer = in_dest_offset - dest_previous_capacity;
 			break;
 		}
-		dest_previous_capacity += capacity_this_buffer;
+		dest_previous_capacity = capacity_this_buffer;
 		++dest_wsabuf_index;
 	}
 
