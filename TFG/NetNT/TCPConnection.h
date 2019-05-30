@@ -28,7 +28,7 @@ public:
     }
     void *GetContext() { return context_pv; }
 
-    TCPConnectionPtr Create(SOCKET const in_socket, PTP_IO const in_ptp_io, CallbackI *const in_net_tcpconnection_callback_i, uint32_t const in_receive_buffer_size, void *const in_context_pv);
+    static TCPConnectionPtr Create(SOCKET const in_socket, PTP_IO const in_ptp_io, CallbackI *const in_net_tcpconnection_callback_i, uint32_t const in_receive_buffer_size, void *const in_context_pv);
 	void Destroy();
 
     TFG_Result TCPConnection::SendPacket(PacketPtr const in_net_packet);
