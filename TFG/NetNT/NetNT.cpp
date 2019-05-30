@@ -1,5 +1,5 @@
 #include "NetNT.h"
-#include "Globals.h"
+#include "Singleton.h"
 #include "OverlappedEx.h"
 #include "UDPSocket.h"
 #include "Packet.h"
@@ -31,7 +31,7 @@ DWORD WINAPI net_iocp_completion_port_thread_main(LPVOID in_pv)
 		DWORD num_bytes_transferred = 0;
 		ULONG_PTR completion_key = 0;
 		LPOVERLAPPED overlapped_p = 0;
-		BOOL const rv_GetQueuedCompletionStatus = call_GetQueuedCompletionStatus(g_net_globals.iocp_h, &num_bytes_transferred, &completion_key, &overlapped_p, INFINITE);
+		BOOL const rv_GetQueuedCompletionStatus = call_GetQueuedCompletionStatus(Singleton::Get().iocp_h, &num_bytes_transferred, &completion_key, &overlapped_p, INFINITE);
 		if (completion_key == 0)
 		{
 			break;
@@ -101,7 +101,7 @@ TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t con
 
 	TFG_CHECK(InterlockedIncrement((LPLONG)&g_net_init_count) == 1);
 
-	TFG_CHECK(SUCCEEDED(net_globals_init(&g_net_globals, in_ptp_callback_environ, in_packet_buffer_size)));
+	TFG_CHECK(SUCCEEDED(Singleton::Get().Init(in_ptp_callback_environ, in_packet_buffer_size)));
 
 	WORD const version_requested = MAKEWORD(2, 2);
 	WSADATA wsa_data;
@@ -113,7 +113,7 @@ TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t con
 	// TODO: Only do this when tp is null?
 	if (in_num_threads)
 	{
-		TFG_CHECK((g_net_globals.iocp_h = call_CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, in_num_threads)) != 0);
+		TFG_CHECK((Singleton::Get().iocp_h = call_CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, in_num_threads)) != 0);
 		g_net.num_threads = in_num_threads;
 		g_net.thread_handles_p = new HANDLE[in_num_threads];
 		for (uint32_t i = 0; i < in_num_threads; ++i)
@@ -136,13 +136,11 @@ void Deinit()
 {
 	TFG_FUNC_ENTER();
 
-	// TODO: Track and destroy sockets, connections, connector and acceptors
-
 	TFG_CHECK_NO_GOTO(call_WSACleanup() != SOCKET_ERROR);
 
 	for (uint32_t i = 0; i < g_net.num_threads; ++i)
 	{
-		TFG_CHECK_NO_GOTO(call_PostQueuedCompletionStatus(g_net_globals.iocp_h, 0, 0, 0));
+		TFG_CHECK_NO_GOTO(call_PostQueuedCompletionStatus(Singleton::Get().iocp_h, 0, 0, 0));
 	}
 	for (uint32_t i = 0; i < g_net.num_threads; ++i)
 	{
@@ -153,13 +151,13 @@ void Deinit()
 		delete[] g_net.thread_handles_p;
 		g_net.thread_handles_p = 0;
 	}
-	if (g_net_globals.iocp_h)
+	if (Singleton::Get().iocp_h)
 	{
-		TFG_CHECK_NO_GOTO(call_CloseHandle(g_net_globals.iocp_h));
-		g_net_globals.iocp_h = 0;
+		TFG_CHECK_NO_GOTO(call_CloseHandle(Singleton::Get().iocp_h));
+		Singleton::Get().iocp_h = 0;
 	}
 
-	net_globals_deinit(&g_net_globals);
+	Singleton::Get().Deinit();
 
 	InterlockedDecrement((LPLONG)&g_net_init_count);
 
@@ -178,7 +176,7 @@ TFG_Result InitSockAddrIn(struct sockaddr_in *const in_sockaddr_in_p, const char
 
 uint32_t GetPacketBufferSize()
 {
-	return g_net_globals.packet_buffer_size;
+	return Singleton::Get().packet_buffer_size;
 }
 
 uint32_t CopyWSABufArrayToWSABufArray(WSABUF const *const in_src_wsabuf_array, uint32_t const in_src_wsabuf_array_size, uint32_t const in_src_offset, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset, uint32_t const in_count)

@@ -7,11 +7,9 @@ namespace TFG
 namespace NetNT
 {
 
-class Globals
+class Singleton
 {
 public:
-	Globals();
-	~Globals();
 	PTP_CALLBACK_ENVIRON ptp_callback_environ;
 	uint32_t packet_buffer_size;
 	HANDLE iocp_h;
@@ -19,12 +17,18 @@ public:
 
 	ObjectTracker<ThreadSingleton> m_ObjectTrackerThreadSingleton;
 	ObjectTracker<UDPSocket> m_ObjectTrackerUDPSocket;
+
+	TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_packet_buffer_size);
+	void Deinit();
+
+	static Singleton &Get() { return s_Instance; }
+
+private:
+	Singleton();
+	~Singleton();
+
+	static Singleton s_Instance;
 };
-
-extern Globals g_net_globals;
-
-TFG_Result net_globals_init(GlobalsPtr const in_this, PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_packet_buffer_size);
-void net_globals_deinit(GlobalsPtr const in_this);
 
 } // namespace NetNT
 } // namespace TFG

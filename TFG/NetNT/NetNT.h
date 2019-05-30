@@ -7,8 +7,8 @@ namespace TFG
 namespace NetNT
 {
 
-class Globals;
-typedef class Globals *GlobalsPtr;
+class Singleton;
+typedef class Singleton *GlobalsPtr;
 class Packet;
 typedef class Packet *PacketPtr;
 class UDPSocket;

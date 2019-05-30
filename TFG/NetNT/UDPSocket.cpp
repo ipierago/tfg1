@@ -2,7 +2,7 @@
 #include "UDPSocket.h"
 #include "Packet.h"
 #include "OverlappedEx.h"
-#include "Globals.h"
+#include "Singleton.h"
 
 TFG_FILE_SETUP()
 
@@ -46,12 +46,15 @@ TFG_Result UDPSocket::InvokeWSARecvFrom() const
 
 		if (this->m_ptpIo)
 			call_CancelThreadpoolIo(this->m_ptpIo);
-		InterlockedDecrement((LPLONG)& this->m_numPendingOverlapped);
+		InterlockedDecrement((LPLONG) & this->m_numPendingOverlapped);
 
-		if (m_IsDeinitBegin && ((e == WSAEINTR) || (e == WSAENOTSOCK))) {
+		if (m_IsDeinitBegin && ((e == WSAEINTR) || (e == WSAENOTSOCK)))
+		{
 			TFG_DEBUG("WSARecvFrom returned %s after DeInit started. Socket is being closed.", TFG_WSAErrorToStringShort(e));
 			TFG_GOTO_FINALLY(TFG_Level_Debug);
-		} else {
+		}
+		else
+		{
 			TFG_ERROR("WSARecvFrom failed with some error other than WSA_IO_PENDING: %s", TFG_WSAErrorToStringShort(e));
 			TFG_GOTO_FINALLY(TFG_Level_Error);
 		}
@@ -101,10 +104,13 @@ void UDPSocket::OnRecvPacket(PacketPtr const in_net_packet_p, TFG_Result const i
 	}
 	else
 	{
-		if (m_IsDeinitBegin && ((hr == __HRESULT_FROM_WIN32(ERROR_OPERATION_ABORTED)) || (hr == __HRESULT_FROM_WIN32(WSAENOTSOCK)))) {
+		if (m_IsDeinitBegin && ((hr == __HRESULT_FROM_WIN32(ERROR_OPERATION_ABORTED)) || (hr == __HRESULT_FROM_WIN32(WSAENOTSOCK))))
+		{
 			TFG_DEBUG("%s recv after DeInit started.  Socket is being closed.", TFG_GetErrorString(hr));
 			//hr = S_OK;
-		} else {
+		}
+		else
+		{
 			TFG_WARNING("Async udp recv operation failed: 0x%08lx: %s", hr, TFG_GetErrorString(hr));
 		}
 		in_net_packet_p->Release();
@@ -253,13 +259,13 @@ TFG_Result UDPSocket::Init(const char *const in_AddressPsz, int32_t const in_Por
 	_sockaddr_in.sin_port = htons((u_short)in_Port);
 	TFG_CHECK(call_bind(m_socket, (SOCKADDR *)&_sockaddr_in, sizeof(_sockaddr_in)) != SOCKET_ERROR);
 
-	if (g_net_globals.iocp_h)
+	if (Singleton::Get().iocp_h)
 	{
-		TFG_CHECK(call_CreateIoCompletionPort((HANDLE)m_socket, g_net_globals.iocp_h, UDPSocket::TypeId, 0) == g_net_globals.iocp_h);
+		TFG_CHECK(call_CreateIoCompletionPort((HANDLE)m_socket, Singleton::Get().iocp_h, UDPSocket::TypeId, 0) == Singleton::Get().iocp_h);
 	}
 	else
 	{
-		TFG_CHECK((m_ptpIo = call_CreateThreadpoolIo((HANDLE)m_socket, IoCompletionCallback, this, g_net_globals.ptp_callback_environ)) != 0);
+		TFG_CHECK((m_ptpIo = call_CreateThreadpoolIo((HANDLE)m_socket, IoCompletionCallback, this, Singleton::Get().ptp_callback_environ)) != 0);
 	}
 
 	for (uint32_t i = 0; i < in_numPendingReceiveCalls; ++i)
@@ -267,7 +273,7 @@ TFG_Result UDPSocket::Init(const char *const in_AddressPsz, int32_t const in_Por
 		TFG_CHECK(SUCCEEDED(InvokeWSARecvFrom()));
 	}
 
-	g_net_globals.m_ObjectTrackerUDPSocket.Add(this);
+	Singleton::Get().m_ObjectTrackerUDPSocket.Add(this);
 
 	rv = S_OK;
 finally:
@@ -282,7 +288,7 @@ void UDPSocket::Deinit()
 	TFG_FUNC_ENTER();
 	m_IsDeinitBegin = true;
 
-	g_net_globals.m_ObjectTrackerUDPSocket.Remove(this);
+	Singleton::Get().m_ObjectTrackerUDPSocket.Remove(this);
 
 	TFG_CHECK_NO_GOTO(0 == call_closesocket(this->m_socket));
 	if (this->m_ptpIo)

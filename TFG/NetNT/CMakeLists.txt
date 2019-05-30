@@ -4,7 +4,7 @@ set(SOURCE
   NetNT.cpp
   Packet.cpp
   UDPSocket.cpp
-  Globals.cpp
+  Singleton.cpp
   ObjectTracker.cpp
   ThreadSingleton.cpp
 )
@@ -14,7 +14,7 @@ set(HEADERS
   OverlappedEx.h
   Packet.h
   UDPSocket.h
-  Globals.h
+  Singleton.h
   ObjectTracker.h
   ThreadSingleton.h
 )
