@@ -93,7 +93,17 @@ void UDPSocket::OnRecvPacket(PacketPtr const in_net_packet_p, TFG_Result const i
 	}
 	else
 	{
-		TFG_WARNING("Async udp recv operation failed: %d: %s", hr, TFG_GetErrorString(hr));
+		if (hr == __HRESULT_FROM_WIN32(ERROR_OPERATION_ABORTED)) {
+			TFG_DEBUG("ERROR_OPERATION_ABORTED recv.  Must be shutting down.");
+			hr = S_OK;
+		}
+		else if (hr == __HRESULT_FROM_WIN32(WSAENOTSOCK)) {
+			TFG_DEBUG("WSAENOTSOCK recv.  Must be shutting down.");
+			hr = S_OK;
+		}
+		else {
+			TFG_WARNING("Async udp recv operation failed: 0x%08lx: %s", hr, TFG_GetErrorString(hr));
+		}
 		in_net_packet_p->Release();
 	}
 	if (FAILED(hr))
