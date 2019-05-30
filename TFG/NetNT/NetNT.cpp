@@ -21,8 +21,6 @@ typedef struct net_t
 } net_t;
 static net_t g_net;
 
-Globals g_net_globals;
-
 DWORD WINAPI net_iocp_completion_port_thread_main(LPVOID in_pv)
 {
 	TFG_FUNC_ENTER();

@@ -267,6 +267,8 @@ TFG_Result UDPSocket::Init(const char *const in_AddressPsz, int32_t const in_Por
 		TFG_CHECK(SUCCEEDED(InvokeWSARecvFrom()));
 	}
 
+	g_net_globals.m_ObjectTrackerUDPSocket.Add(this);
+
 	rv = S_OK;
 finally:
 	if (FAILED(rv))
@@ -279,6 +281,8 @@ void UDPSocket::Deinit()
 {
 	TFG_FUNC_ENTER();
 	m_IsDeinitBegin = true;
+
+	g_net_globals.m_ObjectTrackerUDPSocket.Remove(this);
 
 	TFG_CHECK_NO_GOTO(0 == call_closesocket(this->m_socket));
 	if (this->m_ptpIo)

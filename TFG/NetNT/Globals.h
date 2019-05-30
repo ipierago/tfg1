@@ -1,5 +1,6 @@
 #pragma once
 #include "NetNT.h"
+#include "ObjectTracker.h"
 
 namespace TFG
 {
@@ -9,10 +10,15 @@ namespace NetNT
 class Globals
 {
 public:
+	Globals();
+	~Globals();
 	PTP_CALLBACK_ENVIRON ptp_callback_environ;
 	uint32_t packet_buffer_size;
 	HANDLE iocp_h;
 	volatile int64_t num_packets_in_use;
+
+	//ObjectTracker<Packet> m_ObjectTrackerPacket;
+	ObjectTracker<UDPSocket> m_ObjectTrackerUDPSocket;
 };
 
 extern Globals g_net_globals;
