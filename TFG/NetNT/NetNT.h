@@ -19,6 +19,12 @@ class ThreadSingleton;
 typedef class ThreadSingleton *ThreadSingletonPtr;
 class StreamToDGram;
 typedef class StreamToDGram *StreamToDGramPtr;
+class TCPConnection;
+typedef class TCPConnection *TCPConnectionPtr;
+class TCPAcceptor;
+typedef class TCPAcceptor *TCPAcceptorPtr;
+class TCPConnector;
+typedef class TCPConnector *TCPConnectorPtr;
 
 TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_num_threads, uint32_t const in_packet_buffer_size);
 void Deinit();
@@ -35,8 +41,10 @@ uint32_t CopyWSABufArrayToWSABufArray(WSABUF const *const in_src_wsabuf_array, u
 #define call_CreateThreadpoolIo ::CreateThreadpoolIo
 #define call_StartThreadpoolIo ::StartThreadpoolIo
 #define call_CancelThreadpoolIo ::CancelThreadpoolIo
+#define call_WSARecv ::WSARecv
 #define call_WSARecvFrom ::WSARecvFrom
 #define call_WSAGetOverlappedResult ::WSAGetOverlappedResult
+#define call_WSASend ::WSASend
 #define call_WSASendTo ::WSASendTo
 #define call_WSASocketA ::WSASocketA
 #define call_bind ::bind

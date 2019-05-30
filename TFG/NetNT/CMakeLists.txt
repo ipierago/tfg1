@@ -7,7 +7,7 @@ set(SOURCE
   Singleton.cpp
   StreamToDGram.cpp
   #TCPAcceptor.cpp
-  #TCPConnection.cpp
+  TCPConnection.cpp
   #TCPConnector.cpp  
   ThreadSingleton.cpp
   UDPSocket.cpp
@@ -21,7 +21,7 @@ set(HEADERS
   Singleton.h
   StreamToDGram.h
   #TCPAcceptor.h
-  #TCPConnection.h
+  TCPConnection.h
   #TCPConnector.h
   ThreadSingleton.h
   UDPSocket.h

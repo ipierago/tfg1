@@ -17,6 +17,7 @@ public:
 
 	ObjectTracker<ThreadSingleton> m_ObjectTrackerThreadSingleton;
 	ObjectTracker<UDPSocket> m_ObjectTrackerUDPSocket;
+	ObjectTracker<TCPConnection> m_ObjectTrackerTCPConnection;
 
 	TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_packet_buffer_size);
 	void Deinit();

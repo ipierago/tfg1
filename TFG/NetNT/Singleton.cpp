@@ -40,6 +40,7 @@ void Singleton::Deinit()
 	TFG_FUNC_ENTER();
 
 	m_ObjectTrackerUDPSocket.DestroyContents();
+	m_ObjectTrackerTCPConnection.DestroyContents();
 	m_ObjectTrackerThreadSingleton.DestroyContents();
 
 	TFG_FUNC_EXIT("");
