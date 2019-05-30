@@ -3,7 +3,7 @@
 
 char const *TFG_GetErrorString(uint32_t const in_error_code)
 {
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 	static char buf[512];
 	uint32_t const rv = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, in_error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, sizeof(buf), NULL);
 	for (uint32_t i = 0; i < rv; ++i)
@@ -26,7 +26,7 @@ const char *TFG_ResultToStringShort(TFG_Result const in_hr)
 	case E_FAIL:
 		return "E_FAIL";
 	default:
-		return "UNKNOWN";
+		return "????";
 	}
 }
 

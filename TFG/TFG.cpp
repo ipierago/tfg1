@@ -160,7 +160,7 @@ static void _log_str(const char *const in_)
     OutputDebugStringA(in_);
 //#elif defined(__APPLE__)
 #endif
-    printf("%s\n", in_);
+    printf("%s", in_);
 }
 
 inline int32_t TFG_vsprintf_s(char *const in_buffer, size_t const in_buffer_count, const char *const format, va_list argList)
