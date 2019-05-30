@@ -114,7 +114,7 @@ public:
     } myUDPSocketCallback;
 };
 
-#if 0
+#if 1
 TEST_F(NetNT_Test, Packet)
 {
     TFG::NetNT::PacketPtr const packetPtr = TFG::NetNT::Packet::Create();
@@ -150,7 +150,7 @@ TEST_F(NetNT_Test, UDPSocket)
     udpSocketPtr->Destroy();
 }
 #endif
-#if 0
+#if 1
 TEST_F(NetNT_Test, UDPSocket_Loopback)
 {
     class MyUDPSocketCallback : public TFG::NetNT::UDPSocket::CallbackI
@@ -170,7 +170,7 @@ TEST_F(NetNT_Test, UDPSocket_Loopback)
             delete[] charArray;
 
             in_net_packet_p->Release();
-			m_result = S_OK;
+            m_result = S_OK;
             SetEvent(m_EventHandle);
         };
         virtual void OnSendComplete(TFG::NetNT::UDPSocketPtr const in_net_udpsocket_p, TFG::NetNT::PacketPtr const in_net_packet_p, TFG_Result const in_result)
@@ -179,7 +179,7 @@ TEST_F(NetNT_Test, UDPSocket_Loopback)
             in_net_packet_p->Release();
             if (FAILED(in_result))
             {
-				m_result = in_result;
+                m_result = in_result;
                 SetEvent(m_EventHandle);
             }
         };
@@ -188,7 +188,7 @@ TEST_F(NetNT_Test, UDPSocket_Loopback)
             UNREFERENCED_PARAMETER(in_net_udpsocket_p);
             if (FAILED(in_hr))
             {
-				m_result = in_hr;
+                m_result = in_hr;
                 SetEvent(m_EventHandle);
             }
         }

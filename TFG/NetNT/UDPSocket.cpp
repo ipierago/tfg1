@@ -42,11 +42,19 @@ TFG_Result UDPSocket::InvokeWSARecvFrom() const
 	int32_t const rvWSARecvFrom = call_WSARecvFrom(m_socket, (LPWSABUF)wsabuf_array, wsabuf_array_size, NULL, &flags, (struct sockaddr *)net_packet_p->GetSockAddrInPtr(), _p_sockaddr_in_len, (LPOVERLAPPED)net_overlapped_ex_p, NULL);
 	if ((rvWSARecvFrom != 0) && (!((rvWSARecvFrom == SOCKET_ERROR) && (WSAGetLastError() == WSA_IO_PENDING))))
 	{
-		TFG_ERROR("WSARecvFrom failed with some error other than WSA_IO_PENDING");
+		int e = WSAGetLastError();
+
 		if (this->m_ptpIo)
 			call_CancelThreadpoolIo(this->m_ptpIo);
-		InterlockedDecrement((LPLONG) & this->m_numPendingOverlapped);
-		TFG_GOTO_FINALLY(TFG_Level_Error);
+		InterlockedDecrement((LPLONG)& this->m_numPendingOverlapped);
+
+		if (m_IsDeinitBegin && ((e == WSAEINTR) || (e == WSAENOTSOCK))) {
+			TFG_DEBUG("WSARecvFrom returned %s after DeInit started. Socket is being closed.", TFG_WSAErrorToStringShort(e));
+			TFG_GOTO_FINALLY(TFG_Level_Debug);
+		} else {
+			TFG_ERROR("WSARecvFrom failed with some error other than WSA_IO_PENDING: %s", TFG_WSAErrorToStringShort(e));
+			TFG_GOTO_FINALLY(TFG_Level_Error);
+		}
 	}
 
 	rv = S_OK;
@@ -93,15 +101,10 @@ void UDPSocket::OnRecvPacket(PacketPtr const in_net_packet_p, TFG_Result const i
 	}
 	else
 	{
-		if (hr == __HRESULT_FROM_WIN32(ERROR_OPERATION_ABORTED)) {
-			TFG_DEBUG("ERROR_OPERATION_ABORTED recv.  Must be shutting down.");
-			hr = S_OK;
-		}
-		else if (hr == __HRESULT_FROM_WIN32(WSAENOTSOCK)) {
-			TFG_DEBUG("WSAENOTSOCK recv.  Must be shutting down.");
-			hr = S_OK;
-		}
-		else {
+		if (m_IsDeinitBegin && ((hr == __HRESULT_FROM_WIN32(ERROR_OPERATION_ABORTED)) || (hr == __HRESULT_FROM_WIN32(WSAENOTSOCK)))) {
+			TFG_DEBUG("%s recv after DeInit started.  Socket is being closed.", TFG_GetErrorString(hr));
+			//hr = S_OK;
+		} else {
 			TFG_WARNING("Async udp recv operation failed: 0x%08lx: %s", hr, TFG_GetErrorString(hr));
 		}
 		in_net_packet_p->Release();
@@ -275,6 +278,7 @@ finally:
 void UDPSocket::Deinit()
 {
 	TFG_FUNC_ENTER();
+	m_IsDeinitBegin = true;
 
 	TFG_CHECK_NO_GOTO(0 == call_closesocket(this->m_socket));
 	if (this->m_ptpIo)
@@ -296,7 +300,7 @@ void UDPSocket::Destroy()
 	delete this;
 }
 
-UDPSocket::UDPSocket() : m_numPendingOverlapped(0), m_maxReceivePacketSize(0), m_socket(0), m_udpSocketCallbackI(0), m_ptpIo(0)
+UDPSocket::UDPSocket() : m_numPendingOverlapped(0), m_maxReceivePacketSize(0), m_socket(0), m_udpSocketCallbackI(0), m_ptpIo(0), m_IsDeinitBegin(false)
 {
 }
 UDPSocket::~UDPSocket()

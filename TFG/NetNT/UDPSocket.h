@@ -50,6 +50,8 @@ private:
 
 	PTP_IO m_ptpIo;
 
+	bool m_IsDeinitBegin;
+
 	TFG_Result InvokeWSARecvFrom() const;
 	void OnSendComplete(PacketPtr const in_net_packet_p, TFG_Result const in_result, uint32_t const in_num_bytes_transferred);
 	void OnRecvPacket(PacketPtr const in_net_packet_p, TFG_Result const in_result, uint32_t const in_num_bytes_transferred);
