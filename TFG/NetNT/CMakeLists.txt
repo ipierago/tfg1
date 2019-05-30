@@ -2,21 +2,29 @@ set(MY_NAME TFG_NetNT)
 
 set(SOURCE
   NetNT.cpp
-  Packet.cpp
-  UDPSocket.cpp
-  Singleton.cpp
   ObjectTracker.cpp
+  Packet.cpp
+  Singleton.cpp
+  StreamToDGram.cpp
+  #TCPAcceptor.cpp
+  #TCPConnection.cpp
+  #TCPConnector.cpp  
   ThreadSingleton.cpp
+  UDPSocket.cpp
 )
 
 set(HEADERS
   NetNT.h
+  ObjectTracker.h
   OverlappedEx.h
   Packet.h
-  UDPSocket.h
   Singleton.h
-  ObjectTracker.h
+  StreamToDGram.h
+  #TCPAcceptor.h
+  #TCPConnection.h
+  #TCPConnector.h
   ThreadSingleton.h
+  UDPSocket.h
 )
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})

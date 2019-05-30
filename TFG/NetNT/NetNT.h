@@ -16,13 +16,16 @@ typedef class UDPSocket *UDPSocketPtr;
 struct OverlappedEx;
 typedef struct OverlappedEx *OverlappedExPtr;
 class ThreadSingleton;
-typedef class ThreadSingleton * ThreadSingletonPtr;
+typedef class ThreadSingleton *ThreadSingletonPtr;
+class StreamToDGram;
+typedef class StreamToDGram *StreamToDGramPtr;
 
 TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_num_threads, uint32_t const in_packet_buffer_size);
 void Deinit();
 TFG_Result InitSockAddrIn(struct sockaddr_in *const in_sockaddr_in_p, const char *const in_address_p, int32_t const in_port);
 uint32_t GetPacketBufferSize();
 uint32_t CopyBufferToWSABufArray(void const *const in_src_p, uint32_t const in_src_size, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset);
+uint32_t CopyWSABufArrayToWSABufArray(WSABUF const *const in_src_wsabuf_array, uint32_t const in_src_wsabuf_array_size, uint32_t const in_src_offset, WSABUF const *const in_dest_wsabuf_array, uint32_t const in_dest_wsabuf_array_size, uint32_t const in_dest_offset, uint32_t const in_count);
 } // namespace NetNT
 
 } // namespace TFG
