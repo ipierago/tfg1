@@ -48,10 +48,12 @@ int NetNT_Test_InitAndDeinit()
     return rv;
 }
 
+#if 0
 TEST(NetNT_Test_Standalone, InitAndDeinit)
 {
     EXPECT_EQ(NetNT_Test_InitAndDeinit(), 0);
 }
+#endif
 
 class NetNT_Test : public testing::Test
 {
@@ -96,13 +98,13 @@ public:
         virtual void OnRecvPacket(TFG::NetNT::UDPSocketPtr const in_net_udpsocket_p, TFG::NetNT::PacketPtr const in_net_packet_p)
         {
             UNREFERENCED_PARAMETER(in_net_udpsocket_p);
-			in_net_packet_p->Release();
+            in_net_packet_p->Release();
         };
         virtual void OnSendComplete(TFG::NetNT::UDPSocketPtr const in_net_udpsocket_p, TFG::NetNT::PacketPtr const in_net_packet_p, TFG_Result const in_result)
         {
             UNREFERENCED_PARAMETER(in_net_udpsocket_p);
             UNREFERENCED_PARAMETER(in_result);
-			in_net_packet_p->Release();
+            in_net_packet_p->Release();
         };
         virtual void OnError(TFG::NetNT::UDPSocketPtr const in_net_udpsocket_p, TFG_Result const in_hr)
         {
@@ -112,6 +114,7 @@ public:
     } myUDPSocketCallback;
 };
 
+#if 0
 TEST_F(NetNT_Test, Packet)
 {
     TFG::NetNT::PacketPtr const packetPtr = TFG::NetNT::Packet::Create();
@@ -137,7 +140,8 @@ TEST_F(NetNT_Test, Packet)
     int32_t const rvRelease = packetPtr->Release();
     EXPECT_EQ(rvRelease, 0);
 }
-
+#endif
+#if 1
 TEST_F(NetNT_Test, UDPSocket)
 {
     TFG::NetNT::UDPSocketPtr const udpSocketPtr = TFG::NetNT::UDPSocket::Create("0.0.0.0", 4002, &myUDPSocketCallback, 1, 512);
@@ -145,7 +149,8 @@ TEST_F(NetNT_Test, UDPSocket)
 
     udpSocketPtr->Destroy();
 }
-
+#endif
+#if 0
 TEST_F(NetNT_Test, UDPSocket_Loopback)
 {
     class MyUDPSocketCallback : public TFG::NetNT::UDPSocket::CallbackI
@@ -153,46 +158,58 @@ TEST_F(NetNT_Test, UDPSocket_Loopback)
     public:
         virtual void OnRecvPacket(TFG::NetNT::UDPSocketPtr const in_net_udpsocket_p, TFG::NetNT::PacketPtr const in_net_packet_p)
         {
-			TFG_DEBUG("OnRecvPacket");
             UNREFERENCED_PARAMETER(in_net_udpsocket_p);
-			in_net_packet_p->Release();
-			SetEvent(m_EventHandle);
+
+            uint32_t const size = in_net_packet_p->ComputeSize();
+            char *const charArray = new char[size];
+            uint32_t const rvGetData = in_net_packet_p->GetData(charArray, size);
+            EXPECT_EQ(rvGetData, size);
+            int const rvGetData_memcmp = memcmp(stringPtr, charArray, size);
+            EXPECT_EQ(rvGetData_memcmp, 0);
+
+            delete[] charArray;
+
+            in_net_packet_p->Release();
+			m_result = S_OK;
+            SetEvent(m_EventHandle);
         };
         virtual void OnSendComplete(TFG::NetNT::UDPSocketPtr const in_net_udpsocket_p, TFG::NetNT::PacketPtr const in_net_packet_p, TFG_Result const in_result)
         {
-			TFG_DEBUG("OnSendComplete");
             UNREFERENCED_PARAMETER(in_net_udpsocket_p);
-			in_net_packet_p->Release();
-			if (FAILED(in_result)) {
-				SetEvent(m_EventHandle);
+            in_net_packet_p->Release();
+            if (FAILED(in_result))
+            {
 				m_result = in_result;
-			}
-            
+                SetEvent(m_EventHandle);
+            }
         };
         virtual void OnError(TFG::NetNT::UDPSocketPtr const in_net_udpsocket_p, TFG_Result const in_hr)
         {
-			TFG_DEBUG("OnError");
             UNREFERENCED_PARAMETER(in_net_udpsocket_p);
-			if (FAILED(in_hr)) {
-				SetEvent(m_EventHandle);
+            if (FAILED(in_hr))
+            {
 				m_result = in_hr;
-			}
+                SetEvent(m_EventHandle);
+            }
         }
-	
-		HANDLE m_EventHandle;
-		TFG_Result m_result;
 
-		MyUDPSocketCallback() : m_result(S_OK), m_EventHandle(0) {
-			m_EventHandle = CreateEvent(
-				NULL,               // default security attributes
-				TRUE,               // manual-reset event
-				FALSE,              // initial state is nonsignaled
-				TEXT("EventHandle")  // object name
-			);
-		}
-		~MyUDPSocketCallback() {
-			CloseHandle(m_EventHandle);
-		}
+        HANDLE m_EventHandle;
+        TFG_Result m_result;
+        char const *const stringPtr = "this is a test";
+
+        MyUDPSocketCallback() : m_result(E_FAIL), m_EventHandle(0)
+        {
+            m_EventHandle = CreateEvent(
+                NULL,               // default security attributes
+                TRUE,               // manual-reset event
+                FALSE,              // initial state is nonsignaled
+                TEXT("EventHandle") // object name
+            );
+        }
+        ~MyUDPSocketCallback()
+        {
+            CloseHandle(m_EventHandle);
+        }
 
     } myUDPSocketCallback;
 
@@ -202,7 +219,7 @@ TEST_F(NetNT_Test, UDPSocket_Loopback)
     TFG::NetNT::PacketPtr const packetPtr = TFG::NetNT::Packet::Create();
     GTEST_ASSERT_NE(packetPtr, (TFG::NetNT::PacketPtr)0);
 
-    char const *const stringPtr = "this is a test";
+    char const *const stringPtr = myUDPSocketCallback.stringPtr;
     uint32_t const stringLen = strlen(stringPtr);
     uint32_t const charArraySize = stringLen + 1;
 
@@ -214,10 +231,11 @@ TEST_F(NetNT_Test, UDPSocket_Loopback)
     TFG::NetNT::InitSockAddrIn(&remote_sockaddr_in, "127.0.0.1", 4003);
     TFG_Result const rSendPacket = udpSocketPtr->SendPacket(packetPtr, &remote_sockaddr_in);
     EXPECT_EQ(rSendPacket, S_OK);
-	int32_t const rvRelease = packetPtr->Release();
+    int32_t const rvRelease = packetPtr->Release();
 
-	WaitForSingleObject(myUDPSocketCallback.m_EventHandle, 10000);
-	EXPECT_EQ(myUDPSocketCallback.m_result, S_OK);
+    WaitForSingleObject(myUDPSocketCallback.m_EventHandle, 10000);
+    EXPECT_EQ(myUDPSocketCallback.m_result, S_OK);
 
     udpSocketPtr->Destroy();
 }
+#endif
