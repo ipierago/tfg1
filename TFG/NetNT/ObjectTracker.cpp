@@ -5,6 +5,7 @@
 #include "ThreadSingleton.h"
 #include "TCPConnection.h"
 #include "TCPConnector.h"
+#include "TCPAcceptor.h"
 
 TFG_FILE_SETUP()
 
@@ -75,7 +76,7 @@ TFG_NETNT_OBJECTTRACKER_IMPL(UDPSocket);
 TFG_NETNT_OBJECTTRACKER_IMPL(ThreadSingleton);
 TFG_NETNT_OBJECTTRACKER_IMPL(TCPConnection);
 TFG_NETNT_OBJECTTRACKER_IMPL(TCPConnector);
-
+TFG_NETNT_OBJECTTRACKER_IMPL(TCPAcceptor);
 
 } // namespace NetNT
 

@@ -14,7 +14,7 @@ public:
     class CallbackI
     {
     public:
-        virtual void OnConnectionAttempted(TCPConnectorPtr const in_net_tcpconnector_p, TCPConnection::CallbackI *const out_net_tcpconnection_callback_i_p, uint32_t *const out_receive_buffer_size_p, void **const out_context_pv) = 0;
+        virtual void OnConnectionAttempted(TCPConnectorPtr const in_net_tcpconnector_p, TCPConnection::CallbackI * *const out_net_tcpconnection_callback_i_p, uint32_t *const out_receive_buffer_size_p, void **const out_context_pv) = 0;
 		virtual void OnConnectionSucceeded(TCPConnectorPtr const in_net_tcpconnector_p, TCPConnectionPtr const in_net_tcpconnection_p) = 0;
 		virtual void OnError(TCPConnectorPtr const in_net_tcpconnector_p, TFG_Result const in_hr) = 0;
 

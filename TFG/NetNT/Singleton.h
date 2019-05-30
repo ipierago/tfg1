@@ -19,6 +19,7 @@ public:
 	ObjectTracker<UDPSocket> m_ObjectTrackerUDPSocket;
 	ObjectTracker<TCPConnection> m_ObjectTrackerTCPConnection;
 	ObjectTracker<TCPConnector> m_ObjectTrackerTCPConnector;
+	ObjectTracker<TCPAcceptor> m_ObjectTrackerTCPAcceptor;
 
 	TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_packet_buffer_size);
 	void Deinit();

@@ -34,7 +34,7 @@ void TCPConnector::on_connection(TFG_Result const in_result)
 		TCPConnection::CallbackI * net_tcpconnection_callback_i = 0;
 		uint32_t receive_buffer_size = 0;
 		void *context_pv = 0;
-		net_tcpconnector_callback_i->OnConnectionAttempted(this, net_tcpconnection_callback_i, &receive_buffer_size, &context_pv);
+		net_tcpconnector_callback_i->OnConnectionAttempted(this, &net_tcpconnection_callback_i, &receive_buffer_size, &context_pv);
 
 		net_tcpconnection_p = TCPConnection::Create(socket, ptp_io, net_tcpconnection_callback_i, receive_buffer_size, context_pv);
 		ptp_io = 0;

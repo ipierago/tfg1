@@ -61,3 +61,4 @@ uint32_t CopyWSABufArrayToWSABufArray(WSABUF const *const in_src_wsabuf_array, u
 #define call_WaitForSingleObject ::WaitForSingleObject
 #define call_WSAIoctl ::WSAIoctl
 #define call_ConnectEx ::ConnectEx
+#define call_listen ::listen
