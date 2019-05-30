@@ -16,13 +16,13 @@ ThreadSingleton::ThreadSingleton()
 ThreadSingleton::~ThreadSingleton()
 {
 	g_net_globals.m_ObjectTrackerThreadSingleton.Remove(this);
-	Destroy();
 }
 
 void ThreadSingleton::Destroy()
 {
 	std::for_each(free_packets_std_ptrvec.begin(), free_packets_std_ptrvec.end(), [](Packet *p) { delete p; });
 	std::for_each(free_buffers_std_ptrvec.begin(), free_buffers_std_ptrvec.end(), [](void *p) { delete[] p; });
+	delete this;
 }
 
 ThreadSingleton &ThreadSingleton::Instance()
