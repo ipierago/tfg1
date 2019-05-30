@@ -134,6 +134,9 @@ void TCPAcceptor::on_queued_completion_status(BOOL const in_rv_GetnQueuedComplet
 
 #define NET_TCPACCEPTOR_LISTEN_BACKLOG 100
 
+TCPAcceptor::TCPAcceptor() : num_pending_overlapped(0), socket(0), accept_ex_pfn(0), net_tcpacceptor_callback_i(0), accept_socket(0), dwBytesReceived(0), ptp_io(0){}
+TCPAcceptor::~TCPAcceptor() {}
+
 TCPAcceptorPtr TCPAcceptor::Create(const char *const in_pszAddress, int32_t const in_Port, TCPAcceptor::CallbackI * const in_net_tcpacceptor_callback_i)
 {
 	TFG_FUNC_ENTER();

@@ -3,11 +3,16 @@
 
 #include <TFG/NetNT/Packet.h>
 #include <TFG/NetNT/UDPSocket.h>
+#include <TFG/NetNT/TCPAcceptor.h>
+#include <TFG/NetNT/TCPConnector.h>
+#include <TFG/NetNT/TCPConnection.h>
+#include <TFG/NetNT/StreamToDGram.h>
 
 TFG_FILE_SETUP();
 
 #define BUFFER_BLOCK_SIZE 512
 
+#if 0
 int NetNT_Test_InitAndDeinit()
 {
     int rv = -1;
@@ -47,6 +52,7 @@ int NetNT_Test_InitAndDeinit()
 
     return rv;
 }
+#endif
 
 #if 0
 TEST(NetNT_Test_Standalone, InitAndDeinit)
@@ -114,7 +120,7 @@ public:
     } myUDPSocketCallback;
 };
 
-#if 1
+#if 0
 TEST_F(NetNT_Test, Packet)
 {
     TFG::NetNT::PacketPtr const packetPtr = TFG::NetNT::Packet::Create();
@@ -142,7 +148,7 @@ TEST_F(NetNT_Test, Packet)
 }
 #endif
 
-#if 1
+#if 0
 TEST_F(NetNT_Test, UDPSocket)
 {
     TFG::NetNT::UDPSocketPtr const udpSocketPtr = TFG::NetNT::UDPSocket::Create("0.0.0.0", 4002, &myUDPSocketCallback, 1, 512);
@@ -152,7 +158,7 @@ TEST_F(NetNT_Test, UDPSocket)
 }
 #endif
 
-#if 1
+#if 0
 TEST_F(NetNT_Test, UDPSocket_Loopback)
 {
     class MyUDPSocketCallback : public TFG::NetNT::UDPSocket::CallbackI
@@ -239,5 +245,31 @@ TEST_F(NetNT_Test, UDPSocket_Loopback)
     EXPECT_EQ(myUDPSocketCallback.m_result, S_OK);
 
     udpSocketPtr->Destroy();
+}
+#endif
+
+#if 1
+TEST_F(NetNT_Test, TCPAcceptor)
+{
+	class MyTCPAcceptorCallback : public TFG::NetNT::TCPAcceptor::CallbackI
+	{
+	public:
+		virtual void OnConnectionAttempted(TFG::NetNT::TCPAcceptorPtr const in_net_tcpacceptor_p, TFG::NetNT::TCPConnection::CallbackI * * const out_net_tcpconnection_callback_i_p, uint32_t * const out_receive_buffer_size_p, void * * const out_context_pv)
+		{
+		}
+		virtual void OnConnectionSucceeded(TFG::NetNT::TCPAcceptorPtr const in_net_tcpacceptor_p, TFG::NetNT::TCPConnectionPtr const in_net_tcpconnection_p)
+		{
+
+		}
+		virtual void OnError(TFG::NetNT::TCPAcceptorPtr const in_net_tcpacceptor_p, TFG_Result const in_hr)
+		{
+
+		}
+	} myTCPAcceptorCallback;
+
+	TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr = TFG::NetNT::TCPAcceptor::Create("127.0.0.1", 4004, &myTCPAcceptorCallback);
+	GTEST_ASSERT_NE(tcpAcceptorPtr, (TFG::NetNT::TCPAcceptorPtr)0);
+
+	tcpAcceptorPtr->Destroy();
 }
 #endif

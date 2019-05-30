@@ -31,6 +31,8 @@ public:
 	void Destroy();
 
 private:
+	TCPAcceptor::TCPAcceptor();
+	TCPAcceptor::~TCPAcceptor();
 
 	int32_t num_pending_overlapped;
 

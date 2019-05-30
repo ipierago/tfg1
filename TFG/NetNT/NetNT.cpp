@@ -3,6 +3,9 @@
 #include "OverlappedEx.h"
 #include "UDPSocket.h"
 #include "Packet.h"
+#include "TCPAcceptor.h"
+#include "TCPConnection.h"
+#include "TCPConnector.h"
 
 TFG_FILE_SETUP()
 
@@ -52,34 +55,26 @@ DWORD WINAPI net_iocp_completion_port_thread_main(LPVOID in_pv)
 				(*net_udpsocket_p).OnQueuedCompletionStatus(rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
 			}
 		}
-#if 0
 		else if (net_overlapped_ex_p->_typeid == TCPConnection::TypeId)
 		{
 			TCPConnectionPtr const net_tcpconnection_p = (TCPConnectionPtr)net_overlapped_ex_p->object_p;
-			net_tcpconnection_on_queued_completion_status(net_tcpconnection_p, rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
+			net_tcpconnection_p->on_queued_completion_status(rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
 		}
-#endif
-#if 0
 		else if (net_overlapped_ex_p->_typeid == Packet::TypeId)
 		{
 			TCPConnectionPtr const net_tcpconnection_p = (TCPConnectionPtr)net_overlapped_ex_p->context_p;
-			net_tcpconnection_on_queued_completion_status(net_tcpconnection_p, rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
+			net_tcpconnection_p->on_queued_completion_status(rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
 		}
-#endif
-#if 0		
 		else if (net_overlapped_ex_p->_typeid == TCPAcceptor::TypeId)
 		{
 			TCPAcceptorPtr const net_tcpacceptor_p = (TCPAcceptorPtr)net_overlapped_ex_p->object_p;
-			net_tcpacceptor_on_queued_completion_status(net_tcpacceptor_p, rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
+			net_tcpacceptor_p->on_queued_completion_status(rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
 		}
-#endif
-#if 0
 		else if (net_overlapped_ex_p->_typeid == TCPConnector::TypeId)
 		{
 			TCPConnectorPtr const net_tcpconnector_p = (TCPConnectorPtr)net_overlapped_ex_p->object_p;
-			net_tcpconnector_on_queued_completion_status(net_tcpconnector_p, rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
+			net_tcpconnector_p->on_queued_completion_status(rv_GetQueuedCompletionStatus, num_bytes_transferred, completion_key, overlapped_p);
 		}
-#endif
 		else
 		{
 			TFG_CHECK(FALSE);
