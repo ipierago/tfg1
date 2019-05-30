@@ -114,7 +114,7 @@ public:
     } myUDPSocketCallback;
 };
 
-#if 0
+#if 1
 TEST_F(NetNT_Test, Packet)
 {
     TFG::NetNT::PacketPtr const packetPtr = TFG::NetNT::Packet::Create();
@@ -152,7 +152,7 @@ TEST_F(NetNT_Test, UDPSocket)
 }
 #endif
 
-#if 0
+#if 1
 TEST_F(NetNT_Test, UDPSocket_Loopback)
 {
     class MyUDPSocketCallback : public TFG::NetNT::UDPSocket::CallbackI
