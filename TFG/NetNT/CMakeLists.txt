@@ -6,6 +6,7 @@ set(SOURCE
   UDPSocket.cpp
   Globals.cpp
   ObjectTracker.cpp
+  ThreadSingleton.cpp
 )
 
 set(HEADERS
@@ -15,6 +16,7 @@ set(HEADERS
   UDPSocket.h
   Globals.h
   ObjectTracker.h
+  ThreadSingleton.h
 )
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})

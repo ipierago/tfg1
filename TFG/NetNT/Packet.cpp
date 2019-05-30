@@ -1,11 +1,12 @@
 #include "NetNT.h"
 #include "Packet.h"
 #include "Globals.h"
+#include "ThreadSingleton.h"
 
 TFG_FILE_SETUP()
 
-#define NET_PACKET_THREAD_GLOBALS_FREE_LIST_HIGH_WATER 256
-#define NET_PACKET_THREAD_GLOBALS_FREE_BUFFERS_HIGH_WATER 256
+#define TFG_NETNT_THREADSINGLETON_FREE_LIST_HIGH_WATER 256
+#define TFG_NETNT_THREADSINGLETON_FREE_BUFFERS_HIGH_WATER 256
 
 namespace TFG
 {
@@ -36,26 +37,6 @@ Packet::~Packet()
 	std::for_each(wsabuf_vec.begin(), wsabuf_vec.end(), [](WSABUF &wsabuf) { delete[] wsabuf.buf; });
 }
 
-Packet::ThreadGlobals::ThreadGlobals()
-{
-}
-
-Packet::ThreadGlobals::~ThreadGlobals()
-{
-	std::for_each(free_packets_std_ptrvec.begin(), free_packets_std_ptrvec.end(), [](Packet *p) { delete p; });
-	std::for_each(free_buffers_std_ptrvec.begin(), free_buffers_std_ptrvec.end(), [](void *p) { delete[] p; });
-}
-
-Packet::ThreadGlobals &Packet::ThreadGlobals::Instance()
-{
-	static __declspec(thread) ThreadGlobals *s_ThreadGlobalsPtr = 0;
-	if (s_ThreadGlobalsPtr == 0)
-	{
-		s_ThreadGlobalsPtr = new ThreadGlobals;
-	}
-	return (*s_ThreadGlobalsPtr);
-}
-
 // Does not preserve contents
 TFG_Result Packet::Resize(int32_t const size)
 {
@@ -68,12 +49,12 @@ TFG_Result Packet::Resize(int32_t const size)
 	{
 		if (buffer_index >= wsabuf_vec.size())
 		{
-			ThreadGlobals &threadGlobals = ThreadGlobals::Instance();
+			ThreadSingleton &threadSingleton = ThreadSingleton::Instance();
 			void *buffer_p(0);
-			if (!threadGlobals.free_buffers_std_ptrvec.empty())
+			if (!threadSingleton.free_buffers_std_ptrvec.empty())
 			{
-				buffer_p = threadGlobals.free_buffers_std_ptrvec.back();
-				threadGlobals.free_buffers_std_ptrvec.pop_back();
+				buffer_p = threadSingleton.free_buffers_std_ptrvec.back();
+				threadSingleton.free_buffers_std_ptrvec.pop_back();
 			}
 			else
 			{
@@ -96,11 +77,11 @@ TFG_Result Packet::Resize(int32_t const size)
 	}
 	for (uint32_t i = buffer_index; i < wsabuf_vec.size(); ++i)
 	{
-		ThreadGlobals &threadGlobals = ThreadGlobals::Instance();
+		ThreadSingleton &threadSingleton = ThreadSingleton::Instance();
 		WSABUF &wsabuf = wsabuf_vec.at(i);
-		if (threadGlobals.free_buffers_std_ptrvec.size() < NET_PACKET_THREAD_GLOBALS_FREE_BUFFERS_HIGH_WATER)
+		if (threadSingleton.free_buffers_std_ptrvec.size() < TFG_NETNT_THREADSINGLETON_FREE_BUFFERS_HIGH_WATER)
 		{
-			threadGlobals.free_buffers_std_ptrvec.push_back(wsabuf.buf);
+			threadSingleton.free_buffers_std_ptrvec.push_back(wsabuf.buf);
 		}
 		else
 		{
@@ -123,11 +104,11 @@ Packet *Packet::Create()
 
 	Packet *net_packet_p = 0;
 
-	ThreadGlobals &threadGlobals = ThreadGlobals::Instance();
-	if (!threadGlobals.free_packets_std_ptrvec.empty())
+	ThreadSingleton &threadSingleton = ThreadSingleton::Instance();
+	if (!threadSingleton.free_packets_std_ptrvec.empty())
 	{
-		net_packet_p = threadGlobals.free_packets_std_ptrvec.back();
-		threadGlobals.free_packets_std_ptrvec.pop_back();
+		net_packet_p = threadSingleton.free_packets_std_ptrvec.back();
+		threadSingleton.free_packets_std_ptrvec.pop_back();
 	}
 	else
 	{
@@ -220,12 +201,12 @@ void Packet::on_zero_interface_ref_count()
 void Packet::on_zero_object_ref_count()
 {
 	TFG_FUNC_ENTER();
-	ThreadGlobals &threadGlobals = ThreadGlobals::Instance();
+	ThreadSingleton &threadSingleton = ThreadSingleton::Instance();
 
 	Resize(0);
-	if (threadGlobals.free_packets_std_ptrvec.size() < NET_PACKET_THREAD_GLOBALS_FREE_LIST_HIGH_WATER)
+	if (threadSingleton.free_packets_std_ptrvec.size() < TFG_NETNT_THREADSINGLETON_FREE_LIST_HIGH_WATER)
 	{
-		threadGlobals.free_packets_std_ptrvec.push_back(this);
+		threadSingleton.free_packets_std_ptrvec.push_back(this);
 	}
 	else
 	{

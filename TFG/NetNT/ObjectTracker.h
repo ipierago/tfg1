@@ -11,12 +11,13 @@ template <typename TYPENAME>
 class ObjectTracker
 {
 public:
-    ObjectTracker();
+    ObjectTracker(TFG_Level const in_Level = TFG_Level_Warning);
     ~ObjectTracker();
 	void Add(TYPENAME *const);
     void Remove(TYPENAME *const);
     void DestroyContents();
 private:
+	TFG_Level m_Level;
 	LPCSTR const m_TypeName;
 	std::mutex m_Mutex;
     std::vector<TYPENAME *> m_Objects;

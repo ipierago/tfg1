@@ -17,7 +17,7 @@ public:
 	HANDLE iocp_h;
 	volatile int64_t num_packets_in_use;
 
-	//ObjectTracker<Packet> m_ObjectTrackerPacket;
+	ObjectTracker<ThreadSingleton> m_ObjectTrackerThreadSingleton;
 	ObjectTracker<UDPSocket> m_ObjectTrackerUDPSocket;
 };
 

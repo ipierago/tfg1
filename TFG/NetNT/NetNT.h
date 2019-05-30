@@ -15,6 +15,8 @@ class UDPSocket;
 typedef class UDPSocket *UDPSocketPtr;
 struct OverlappedEx;
 typedef struct OverlappedEx *OverlappedExPtr;
+class ThreadSingleton;
+typedef class ThreadSingleton * ThreadSingletonPtr;
 
 TFG_Result Init(PTP_CALLBACK_ENVIRON const in_ptp_callback_environ, uint32_t const in_num_threads, uint32_t const in_packet_buffer_size);
 void Deinit();

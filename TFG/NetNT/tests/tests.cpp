@@ -114,7 +114,7 @@ public:
     } myUDPSocketCallback;
 };
 
-#if 1
+#if 0
 TEST_F(NetNT_Test, Packet)
 {
     TFG::NetNT::PacketPtr const packetPtr = TFG::NetNT::Packet::Create();
@@ -141,6 +141,7 @@ TEST_F(NetNT_Test, Packet)
     EXPECT_EQ(rvRelease, 0);
 }
 #endif
+
 #if 1
 TEST_F(NetNT_Test, UDPSocket)
 {
@@ -150,7 +151,8 @@ TEST_F(NetNT_Test, UDPSocket)
     udpSocketPtr->Destroy();
 }
 #endif
-#if 1
+
+#if 0
 TEST_F(NetNT_Test, UDPSocket_Loopback)
 {
     class MyUDPSocketCallback : public TFG::NetNT::UDPSocket::CallbackI

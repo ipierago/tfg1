@@ -36,6 +36,8 @@ public:
 
     static TFG_TypeId TypeId;
 
+	friend class ThreadSingleton;
+
 private:
     DISALLOW_COPY_AND_ASSIGN(Packet);
 
@@ -51,15 +53,6 @@ private:
     int32_t remote_sockaddr_in_len;
     std::vector<WSABUF> wsabuf_vec;
     OverlappedEx net_overlapped_ex;
-
-    struct ThreadGlobals
-    {
-        ThreadGlobals();
-        ~ThreadGlobals();
-        std::vector<Packet *> free_packets_std_ptrvec;
-        std::vector<void *> free_buffers_std_ptrvec;
-        static ThreadGlobals &Instance();
-    };
 };
 
 } // namespace NetNT

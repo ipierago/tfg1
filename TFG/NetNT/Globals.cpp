@@ -1,5 +1,6 @@
 #include "NetNT.h"
 #include "Globals.h"
+#include "ThreadSingleton.h"
 
 TFG_FILE_SETUP()
 
@@ -11,7 +12,7 @@ namespace NetNT
 Globals g_net_globals;
 
 
-Globals::Globals()
+Globals::Globals() : m_ObjectTrackerThreadSingleton(TFG_Level_Debug)
 {
 
 }
@@ -44,6 +45,7 @@ void net_globals_deinit(GlobalsPtr const in_this)
 	TFG_FUNC_ENTER();
 
 	in_this->m_ObjectTrackerUDPSocket.DestroyContents();
+	in_this->m_ObjectTrackerThreadSingleton.DestroyContents();
 
 	TFG_FUNC_EXIT("");
 }
