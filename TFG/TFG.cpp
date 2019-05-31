@@ -233,7 +233,7 @@ void TFG_FuncEnter()
     char buf[1024];
     int32_t len = 0;
     len += sprintf_header(buf, sizeof(buf));
-    len += TFG_sprintf_s(buf + len, sizeof(buf) - len, "(enter) ");
+    len += TFG_sprintf_s(buf + len, sizeof(buf) - len, "(enter) \n");
     _log_str(buf);
 }
 
