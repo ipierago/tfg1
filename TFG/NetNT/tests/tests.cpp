@@ -388,7 +388,7 @@ TEST_F(NetNT_Test, TCP_Loopback)
     TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr = TFG::NetNT::TCPAcceptor::Create("127.0.0.1", 4004, &myTCPAcceptorCallback);
     GTEST_ASSERT_NE(tcpAcceptorPtr, (TFG::NetNT::TCPAcceptorPtr)0);
 
-    TFG::NetNT::TCPConnectorPtr const tcpConnectorPtr = TFG::NetNT::TCPConnector::Create("127.0.0.1", 4005, "127.0.0.1", 4006, &myTCPConnectorCallback);
+    TFG::NetNT::TCPConnectorPtr const tcpConnectorPtr = TFG::NetNT::TCPConnector::Create("127.0.0.1", 4005, "127.0.0.1", 4004, &myTCPConnectorCallback);
     GTEST_ASSERT_NE(tcpConnectorPtr, (TFG::NetNT::TCPConnectorPtr)0);
 
     printf("Test is running.  Press a key to terminate...\n");
