@@ -30,6 +30,9 @@ public:
 	static TCPAcceptorPtr TCPAcceptor::Create(const char *const in_pszAddress, int32_t const in_Port, TCPAcceptor::CallbackI * const in_net_tcpacceptor_callback_i);
 	void Destroy();
 
+	SOCKET GetAcceptSocket() const { return accept_socket; }
+	SOCKET GetSocket() const { return socket; }
+
 private:
 	TCPAcceptor::TCPAcceptor();
 	TCPAcceptor::~TCPAcceptor();

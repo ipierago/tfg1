@@ -70,7 +70,7 @@ public:
     virtual void SetUp()
     {
         TFG_Init();
-        TFG_SetGlobalLevelLog(TFG_Level_Trace2);
+		TFG_SetGlobalLevelLog(TFG_Level_Debug);
 
         InitializeThreadpoolEnvironment(&tp_callback_environ);
         ptp_pool = CreateThreadpool(NULL);
@@ -301,7 +301,7 @@ TEST_F(NetNT_Test, TCPAcceptor2)
 }
 #endif
 
-#if 1
+#if 0
 TEST_F(NetNT_Test, TCP_Loopback)
 {
     class MyTCPConnectionCallback : public TFG::NetNT::TCPConnection::CallbackI
@@ -398,5 +398,180 @@ TEST_F(NetNT_Test, TCP_Loopback)
     tcpConnectorPtr->Destroy();
 
     tcpAcceptorPtr->Destroy();
+}
+#endif
+
+struct IPAndPort {
+	char m_IP[16];
+	unsigned int m_Port;
+};
+
+IPAndPort IPAndPortFromSockAddrIn(struct sockaddr_in & sockAddrIn)
+{
+	IPAndPort rv;
+	inet_ntop(AF_INET, &sockAddrIn.sin_addr, rv.m_IP, sizeof(rv.m_IP));
+	rv.m_Port = ntohs(sockAddrIn.sin_port);
+	return rv;
+}
+
+IPAndPort IPAndPortFromSocket(SOCKET sockfd) {
+	struct sockaddr_in my_addr;
+	memset(&my_addr, 0, sizeof(my_addr));
+	int len = sizeof(my_addr);
+	getsockname(sockfd, (struct sockaddr *) &my_addr, &len);
+	return IPAndPortFromSockAddrIn(my_addr);
+}
+
+#if 1
+TEST_F(NetNT_Test, TCP_LoopbackEchoSimple)
+{
+    class TCPEchoServer : public TFG::NetNT::TCPConnection::CallbackI, TFG::NetNT::TCPAcceptor::CallbackI
+    {
+    public:
+        TCPEchoServer(int const port = 0) : m_tcpAcceptorPtr(0)
+        {
+            m_tcpAcceptorPtr = TFG::NetNT::TCPAcceptor::Create("127.0.0.1", port, this);
+			IPAndPort ipAndPortAcceptorSocket = IPAndPortFromSocket(m_tcpAcceptorPtr->GetSocket());
+			IPAndPort ipAndPortAcceptorAcceptSocket = IPAndPortFromSocket(m_tcpAcceptorPtr->GetAcceptSocket());
+			TFG_DEBUG("Acceptor::Socket %s:%u, Acceptor::AcceptSocket %s:%u", ipAndPortAcceptorSocket.m_IP, ipAndPortAcceptorSocket.m_Port, ipAndPortAcceptorAcceptSocket.m_IP, ipAndPortAcceptorAcceptSocket.m_Port);
+        }
+        ~TCPEchoServer()
+        {
+            std::for_each(m_tcpConnectionPtrArray.begin(), m_tcpConnectionPtrArray.end(), [](TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr) { tcpConnectionPtr->Destroy(); });
+            m_tcpConnectionPtrArray.resize(0);
+            m_tcpAcceptorPtr->Destroy();
+            m_tcpAcceptorPtr = 0;
+        }
+        virtual void TFG::NetNT::TCPConnection::CallbackI::OnRecvPacket(TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr, TFG::NetNT::PacketPtr const packetPtr)
+        {
+			IPAndPort ipAndPortConnection = IPAndPortFromSocket(tcpConnectionPtr->GetSocket());
+			IPAndPort ipAndPortPacket = IPAndPortFromSockAddrIn(*packetPtr->GetSockAddrInPtr());
+			TFG_DEBUG("tcpConnectionPtr: %s:%u, packetPtr: %s:%u", ipAndPortConnection.m_IP, ipAndPortConnection.m_Port, ipAndPortPacket.m_IP, ipAndPortPacket.m_Port);
+			tcpConnectionPtr->SendPacket(packetPtr);
+        };
+        virtual void TFG::NetNT::TCPConnection::CallbackI::OnSendComplete(TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr, TFG::NetNT::PacketPtr const packetPtr, TFG_Result const in_result)
+        {
+			IPAndPort ipAndPortConnection = IPAndPortFromSocket(tcpConnectionPtr->GetSocket());
+			IPAndPort ipAndPortPacket = IPAndPortFromSockAddrIn(*packetPtr->GetSockAddrInPtr());
+			TFG_DEBUG("tcpConnectionPtr: %s:%u, packetPtr: %s:%u", ipAndPortConnection.m_IP, ipAndPortConnection.m_Port, ipAndPortPacket.m_IP, ipAndPortPacket.m_Port);
+        };
+        virtual void TFG::NetNT::TCPConnection::CallbackI::OnError(TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr, TFG_Result const in_hr)
+        {
+			IPAndPort ipAndPortConnection = IPAndPortFromSocket(tcpConnectionPtr->GetSocket());
+			TFG_DEBUG("tcpConnectionPtr: %s:%u, in_hr: 0x%08lx (%s)", ipAndPortConnection.m_IP, ipAndPortConnection.m_Port, in_hr, TFG_GetErrorString(in_hr));
+        };
+
+        virtual void TFG::NetNT::TCPAcceptor::CallbackI::OnConnectionAttempted(TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr, TFG::NetNT::TCPConnection::CallbackI **const tcpConnectorCallbackPtrPtr, uint32_t *const recvBufSizePtr, void **const contextPtrPtr)
+        {
+            TFG_FUNC_ENTER();
+			IPAndPort ipAndPort = IPAndPortFromSocket(tcpAcceptorPtr->GetSocket());
+			TFG_DEBUG("%s:%u", ipAndPort.m_IP, ipAndPort.m_Port);
+            *tcpConnectorCallbackPtrPtr = this;
+            *recvBufSizePtr = 512;
+            *contextPtrPtr = 0;
+            TFG_FUNC_EXIT("");
+        }
+        virtual void TFG::NetNT::TCPAcceptor::CallbackI::OnConnectionSucceeded(TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr, TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr)
+        {
+			IPAndPort ipAndPortAcceptor = IPAndPortFromSocket(tcpAcceptorPtr->GetSocket());
+			IPAndPort ipAndPortConnection = IPAndPortFromSocket(tcpConnectionPtr->GetSocket());
+			TFG_DEBUG("Acceptor: %s:%u, Connection: %s:%u", ipAndPortAcceptor.m_IP, ipAndPortAcceptor.m_Port, ipAndPortConnection.m_IP, ipAndPortConnection.m_Port);
+            m_tcpConnectionPtrArray.push_back(tcpConnectionPtr);
+        }
+        virtual void TFG::NetNT::TCPAcceptor::CallbackI::OnError(TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr, TFG_Result const in_hr)
+        {
+			IPAndPort ipAndPortAcceptor = IPAndPortFromSocket(tcpAcceptorPtr->GetSocket());
+			TFG_DEBUG("tcpAcceptorPtr: %s:%u, in_hr: 0x%08lx (%s)", ipAndPortAcceptor.m_IP, ipAndPortAcceptor.m_Port, in_hr, TFG_GetErrorString(in_hr));
+        }
+
+		TFG::NetNT::TCPAcceptorPtr GetTCPAcceptorPtr() { return m_tcpAcceptorPtr; }
+
+    private:
+        TFG::NetNT::TCPAcceptorPtr m_tcpAcceptorPtr;
+        std::vector<TFG::NetNT::TCPConnectionPtr> m_tcpConnectionPtrArray;
+    };
+
+    class TCPEchoClient : public TFG::NetNT::TCPConnector::CallbackI, TFG::NetNT::TCPConnection::CallbackI
+    {
+    public:
+		TCPEchoClient(int const remotePort)
+        {
+            m_tcpConnectorPtr = TFG::NetNT::TCPConnector::Create(INADDR_ANY, 0, "127.0.0.1", remotePort, this);
+			IPAndPort ipAndPortConnector = IPAndPortFromSocket(m_tcpConnectorPtr->GetSocket());
+			TFG_DEBUG("Connector: %s:%u", ipAndPortConnector.m_IP, ipAndPortConnector.m_Port);
+        }
+        ~TCPEchoClient()
+        {
+            std::for_each(m_tcpConnectionPtrArray.begin(), m_tcpConnectionPtrArray.end(), [](TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr) {tcpConnectionPtr->Destroy(); });
+            m_tcpConnectionPtrArray.resize(0);
+            m_tcpConnectorPtr->Destroy();
+            m_tcpConnectorPtr = 0;
+        }
+
+		// TCPConnector::CallbackI
+        virtual void TFG::NetNT::TCPConnector::CallbackI::OnConnectionAttempted(TFG::NetNT::TCPConnectorPtr const tcpConnectorPtr, TFG::NetNT::TCPConnection::CallbackI **const tcpConnectionCallbackIPtrPtr, uint32_t *const recvBufSizePtr, void **const contextPtrPtr)
+        {
+            TFG_FUNC_ENTER();
+			IPAndPort ipAndPortConnector = IPAndPortFromSocket(tcpConnectorPtr->GetSocket());
+			TFG_DEBUG("Connector: %s:%u", ipAndPortConnector.m_IP, ipAndPortConnector.m_Port);
+            *tcpConnectionCallbackIPtrPtr = this;
+            *recvBufSizePtr = 512;
+            *contextPtrPtr = 0;
+            TFG_FUNC_EXIT("");
+        }
+        virtual void TFG::NetNT::TCPConnector::CallbackI::OnConnectionSucceeded(TFG::NetNT::TCPConnectorPtr const tcpConnectorPtr, TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr)
+        {
+			IPAndPort ipAndPortConnector= IPAndPortFromSocket(tcpConnectorPtr->GetSocket());
+			IPAndPort ipAndPortConnection = IPAndPortFromSocket(tcpConnectionPtr->GetSocket());
+			TFG_DEBUG("Connector: %s:%u, Connection: %s:%u", ipAndPortConnector.m_IP, ipAndPortConnector.m_Port, ipAndPortConnection.m_IP, ipAndPortConnection.m_Port);
+			m_tcpConnectionPtrArray.push_back(tcpConnectionPtr);
+
+			// Send test packet
+			TFG::NetNT::PacketPtr const packetPtr = TFG::NetNT::Packet::Create();
+			char const *const stringPtr = "this is a test";
+			uint32_t const stringLen = strlen(stringPtr);
+			uint32_t const charArraySize = stringLen + 1;
+			uint32_t const rvAppendData = packetPtr->AppendData(stringPtr, charArraySize);
+			TFG_Result const rSendPacket = tcpConnectionPtr->SendPacket(packetPtr);
+			EXPECT_EQ(rSendPacket, S_OK);
+			int32_t const rvRelease = packetPtr->Release();
+        }
+        virtual void TFG::NetNT::TCPConnector::CallbackI::OnError(TFG::NetNT::TCPConnectorPtr const tcpConnectorPtr, TFG_Result const in_hr)
+        {
+			IPAndPort ipAndPortConnector = IPAndPortFromSocket(tcpConnectorPtr->GetSocket());
+			TFG_DEBUG("tcpConnectorPtr: %s:%u, in_hr: 0x%08lx (%s)", ipAndPortConnector.m_IP, ipAndPortConnector.m_Port, in_hr, TFG_GetErrorString(in_hr));
+        }
+
+		// TCPConnection::CallbackI
+		virtual void TFG::NetNT::TCPConnection::CallbackI::OnRecvPacket(TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr, TFG::NetNT::PacketPtr const packetPtr)
+		{
+			IPAndPort ipAndPortConnection = IPAndPortFromSocket(tcpConnectionPtr->GetSocket());
+			IPAndPort ipAndPortPacket = IPAndPortFromSockAddrIn(*packetPtr->GetSockAddrInPtr());
+			TFG_DEBUG("tcpConnectionPtr: %s:%u, packetPtr: %s:%u", ipAndPortConnection.m_IP, ipAndPortConnection.m_Port, ipAndPortPacket.m_IP, ipAndPortPacket.m_Port);
+		};
+		virtual void TFG::NetNT::TCPConnection::CallbackI::OnSendComplete(TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr, TFG::NetNT::PacketPtr const packetPtr, TFG_Result const in_result)
+		{
+			IPAndPort ipAndPortConnection = IPAndPortFromSocket(tcpConnectionPtr->GetSocket());
+			IPAndPort ipAndPortPacket = IPAndPortFromSockAddrIn(*packetPtr->GetSockAddrInPtr());
+			TFG_DEBUG("tcpConnectionPtr: %s:%u, packetPtr: %s:%u", ipAndPortConnection.m_IP, ipAndPortConnection.m_Port, ipAndPortPacket.m_IP, ipAndPortPacket.m_Port);
+		};
+		virtual void TFG::NetNT::TCPConnection::CallbackI::OnError(TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr, TFG_Result const in_hr)
+		{
+			IPAndPort ipAndPortConnection = IPAndPortFromSocket(tcpConnectionPtr->GetSocket());
+			TFG_DEBUG("tcpConnectionPtr: %s:%u, in_hr: 0x%08lx (%s)", ipAndPortConnection.m_IP, ipAndPortConnection.m_Port, in_hr, TFG_GetErrorString(in_hr));
+		};
+
+
+    private:
+        TFG::NetNT::TCPConnectorPtr m_tcpConnectorPtr;
+        std::vector<TFG::NetNT::TCPConnectionPtr> m_tcpConnectionPtrArray;
+    };
+
+    TCPEchoServer tcpEchoServer;
+	IPAndPort ipAndPortAcceptorSocket = IPAndPortFromSocket(tcpEchoServer.GetTCPAcceptorPtr()->GetSocket());
+    TCPEchoClient tcpEchoClient0(ipAndPortAcceptorSocket.m_Port);
+	TCPEchoClient tcpEchoClient1(ipAndPortAcceptorSocket.m_Port);
+
+    Sleep(1000);
 }
 #endif

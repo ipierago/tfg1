@@ -137,7 +137,7 @@ TCPConnectorPtr TCPConnector::Create(const char *const in_pszAddressLocal, int32
 
 	struct sockaddr_in _sockaddr_in_local;
 	_sockaddr_in_local.sin_family = AF_INET;
-	_sockaddr_in_local.sin_addr.s_addr = inet_addr(in_pszAddressLocal);
+	_sockaddr_in_local.sin_addr.s_addr = (in_pszAddressLocal ? inet_addr(in_pszAddressLocal) : INADDR_ANY);
 	_sockaddr_in_local.sin_port = htons((u_short)in_PortLocal);
 	TFG_CHECK(call_bind(net_tcpconnector_p->socket, (SOCKADDR *)&_sockaddr_in_local, sizeof(_sockaddr_in_local)) != SOCKET_ERROR);
 

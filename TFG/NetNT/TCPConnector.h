@@ -32,6 +32,8 @@ public:
 	static TCPConnectorPtr TCPConnector::Create(const char *const in_pszAddressLocal, int32_t const in_PortLocal, const char *const in_pszAddressRemote, int32_t const in_PortRemote, TCPConnector::CallbackI * const in_net_tcpconnector_callback_i);
 	void Destroy();
 
+	SOCKET GetSocket() const { return socket; }
+
 private:
 	TCPConnector();
 	~TCPConnector();
