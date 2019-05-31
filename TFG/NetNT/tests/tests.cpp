@@ -97,7 +97,7 @@ public:
         DestroyThreadpoolEnvironment(&tp_callback_environ);
         TFG_Deinit();
     }
-
+#if 0
     class MyUDPSocketCallback : public TFG::NetNT::UDPSocket::CallbackI
     {
     public:
@@ -118,6 +118,7 @@ public:
             UNREFERENCED_PARAMETER(in_hr);
         }
     } myUDPSocketCallback;
+#endif
 };
 
 #if 0
@@ -248,7 +249,7 @@ TEST_F(NetNT_Test, UDPSocket_Loopback)
 }
 #endif
 
-#if 1
+#if 0
 TEST_F(NetNT_Test, TCPAcceptor)
 {
 	class MyTCPAcceptorCallback : public TFG::NetNT::TCPAcceptor::CallbackI
@@ -271,5 +272,125 @@ TEST_F(NetNT_Test, TCPAcceptor)
 	GTEST_ASSERT_NE(tcpAcceptorPtr, (TFG::NetNT::TCPAcceptorPtr)0);
 
 	tcpAcceptorPtr->Destroy();
+}
+#endif
+
+#if 0
+TEST_F(NetNT_Test, TCPAcceptor2)
+{
+	class MyTCPAcceptorCallback : public TFG::NetNT::TCPAcceptor::CallbackI
+	{
+	public:
+		virtual void OnConnectionAttempted(TFG::NetNT::TCPAcceptorPtr const in_net_tcpacceptor_p, TFG::NetNT::TCPConnection::CallbackI * * const out_net_tcpconnection_callback_i_p, uint32_t * const out_receive_buffer_size_p, void * * const out_context_pv)
+		{
+		}
+		virtual void OnConnectionSucceeded(TFG::NetNT::TCPAcceptorPtr const in_net_tcpacceptor_p, TFG::NetNT::TCPConnectionPtr const in_net_tcpconnection_p)
+		{
+
+		}
+		virtual void OnError(TFG::NetNT::TCPAcceptorPtr const in_net_tcpacceptor_p, TFG_Result const in_hr)
+		{
+
+		}
+	} myTCPAcceptorCallback;
+
+	TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr = TFG::NetNT::TCPAcceptor::Create("127.0.0.1", 4004, &myTCPAcceptorCallback);
+	GTEST_ASSERT_NE(tcpAcceptorPtr, (TFG::NetNT::TCPAcceptorPtr)0);
+
+	tcpAcceptorPtr->Destroy();
+}
+#endif
+
+
+#if 1
+TEST_F(NetNT_Test, TCP_Loopback)
+{
+	class MyTCPConnectionCallback : public TFG::NetNT::TCPConnection::CallbackI
+	{
+	public:
+		virtual void OnRecvPacket(TFG::NetNT::TCPConnectionPtr const in_net_tcpconnection_p, TFG::NetNT::PacketPtr const in_net_packet_p) {
+			TFG_DEBUG("");
+		};
+		virtual void OnSendComplete(TFG::NetNT::TCPConnectionPtr const in_net_tcpconnection_p, TFG::NetNT::PacketPtr const in_net_packet_p, TFG_Result const in_result) {
+			TFG_DEBUG("");
+		};
+		virtual void OnError(TFG::NetNT::TCPConnectionPtr const in_net_tcpconnection_p, TFG_Result const in_hr) {
+			TFG_DEBUG("");
+		};
+	} myTCPConnectionCallback;
+
+	class MyTCPAcceptorCallback : public TFG::NetNT::TCPAcceptor::CallbackI
+	{
+		MyTCPConnectionCallback & m_myTCPConnectionCallback;
+		std::vector<TFG::NetNT::TCPConnectionPtr> m_tcpConnectionPtrArray;
+	public:
+		MyTCPAcceptorCallback(MyTCPConnectionCallback & myTCPConnectionCallback) : m_myTCPConnectionCallback(myTCPConnectionCallback) {
+		}
+		~MyTCPAcceptorCallback() {
+			std::for_each(m_tcpConnectionPtrArray.begin(), m_tcpConnectionPtrArray.end(), [](TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr) {TFG_DEBUG("");  tcpConnectionPtr->Destroy(); });
+			m_tcpConnectionPtrArray.resize(0);
+		}
+		virtual void OnConnectionAttempted(TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr, TFG::NetNT::TCPConnection::CallbackI * * const tcpConnectorCallbackPtrPtr, uint32_t * const recvBufSizePtr, void * * const contextPtrPtr)
+		{
+			TFG_FUNC_ENTER();
+			*tcpConnectorCallbackPtrPtr = &m_myTCPConnectionCallback;
+			*recvBufSizePtr = 512;
+			*contextPtrPtr = 0;
+			TFG_FUNC_EXIT("");
+		}
+		virtual void OnConnectionSucceeded(TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr, TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr)
+		{
+			m_tcpConnectionPtrArray.push_back(tcpConnectionPtr);
+			TFG_DEBUG("");
+		}
+		virtual void OnError(TFG::NetNT::TCPAcceptorPtr const in_net_tcpacceptor_p, TFG_Result const in_hr)
+		{
+			TFG_DEBUG("");
+		}
+	} myTCPAcceptorCallback(myTCPConnectionCallback);
+
+
+	class MyTCPConnectorCallback : public TFG::NetNT::TCPConnector::CallbackI
+	{
+		MyTCPConnectionCallback m_myTCPConnectionCallback;
+		std::vector<TFG::NetNT::TCPConnectionPtr> m_tcpConnectionPtrArray;
+	public:
+		MyTCPConnectorCallback(MyTCPConnectionCallback & myTCPConnectionCallback) : m_myTCPConnectionCallback(myTCPConnectionCallback) {}
+		~MyTCPConnectorCallback() {
+			std::for_each(m_tcpConnectionPtrArray.begin(), m_tcpConnectionPtrArray.end(), [](TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr) {TFG_DEBUG("");  tcpConnectionPtr->Destroy(); });
+			m_tcpConnectionPtrArray.resize(0);
+		}
+		virtual void OnConnectionAttempted(TFG::NetNT::TCPConnectorPtr const tcpConnectorPtr, TFG::NetNT::TCPConnection::CallbackI * *const tcpConnectionCallbackIPtrPtr, uint32_t *const recvBufSizePtr, void **const contextPtrPtr)
+		{
+			TFG_FUNC_ENTER();
+			*tcpConnectionCallbackIPtrPtr = &m_myTCPConnectionCallback;
+			*recvBufSizePtr = 512;
+			*contextPtrPtr = 0;
+			TFG_FUNC_EXIT("");
+		}
+		virtual void OnConnectionSucceeded(TFG::NetNT::TCPConnectorPtr const tcpConnectorPtr, TFG::NetNT::TCPConnectionPtr const tcpConnectionPtr)
+		{
+			m_tcpConnectionPtrArray.push_back(tcpConnectionPtr);
+			TFG_DEBUG("");
+		}
+		virtual void OnError(TFG::NetNT::TCPConnectorPtr const in_net_tcpconnector_p, TFG_Result const in_hr)
+		{
+			TFG_DEBUG("");
+		}
+	} myTCPConnectorCallback(myTCPConnectionCallback);
+
+	TFG::NetNT::TCPAcceptorPtr const tcpAcceptorPtr = TFG::NetNT::TCPAcceptor::Create("127.0.0.1", 4004, &myTCPAcceptorCallback);
+	GTEST_ASSERT_NE(tcpAcceptorPtr, (TFG::NetNT::TCPAcceptorPtr)0);
+
+	TFG::NetNT::TCPConnectorPtr const tcpConnectorPtr = TFG::NetNT::TCPConnector::Create("127.0.0.1", 4005, "127.0.0.1", 4006, &myTCPConnectorCallback);
+	GTEST_ASSERT_NE(tcpConnectorPtr, (TFG::NetNT::TCPConnectorPtr)0);
+
+	printf("Test is running.  Press a key to terminate...\n"); _getch();
+	//Sleep(1500);
+
+	tcpConnectorPtr->Destroy();
+
+	tcpAcceptorPtr->Destroy();
+
 }
 #endif

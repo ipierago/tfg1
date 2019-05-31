@@ -255,7 +255,7 @@ void TCPConnection::Destroy()
 	TFG_FUNC_EXIT("");
 }
 
-TCPConnection::TCPConnection() {
+TCPConnection::TCPConnection() : num_pending_overlapped(0), receive_buffer_size(0), m_CallbackIPtr(0), socket(0), ptp_io(0), context_pv(0) {
 
 }
 

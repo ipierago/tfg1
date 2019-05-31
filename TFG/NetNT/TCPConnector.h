@@ -33,6 +33,8 @@ public:
 	void Destroy();
 
 private:
+	TCPConnector();
+	~TCPConnector();
     int32_t num_pending_overlapped;
     SOCKET socket;
     CallbackI *net_tcpconnector_callback_i;

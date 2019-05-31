@@ -185,8 +185,10 @@ void TCPConnector::Destroy()
 	if (ptp_io)
 		call_WaitForThreadpoolIoCallbacks(ptp_io, FALSE);
 
-	if (ptp_io)
+	if (ptp_io) {
 		call_CloseThreadpoolIo(ptp_io);
+		//ptp_io = 0;
+	}
 
 	while (num_pending_overlapped > 0)
 	{
@@ -198,6 +200,16 @@ void TCPConnector::Destroy()
 	delete this;
 
 	TFG_FUNC_EXIT("");
+}
+
+TCPConnector::TCPConnector() : num_pending_overlapped(0), socket(0), net_tcpconnector_callback_i(0), ptp_io(0)
+{
+	
+}
+
+TCPConnector::~TCPConnector()
+{
+
 }
 
 } // namespace NetNT
