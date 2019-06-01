@@ -5,6 +5,7 @@ add_subdirectory(FooBar)
 
 #add_subdirectory(Call)
 add_subdirectory(NetNT)
+add_subdirectory(MayaPlugin)
 
 set(MY_NAME TFG)
 

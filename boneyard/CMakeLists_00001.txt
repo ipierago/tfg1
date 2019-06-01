@@ -1,0 +1,29 @@
+set(MY_NAME TFG_MayaPlugin)
+
+set(SOURCE
+  mllmain.cpp
+  stdafx.cpp
+)
+
+set(HEADERS
+  stdafx.h
+)
+
+include_directories ("$ENV{DEVKIT_LOCATION}/include")
+
+add_library (${MY_NAME} ${SOURCE} ${HEADERS})
+
+if (WIN32)
+	target_compile_definitions(${MY_NAME} PRIVATE NT_PLUGIN)
+endif()
+
+find_library(FIND_LIBRARY_MAYA
+    NAMES OpenMaya.lib OpenMayaUI.lib OpenMayaRender.lib Foundation.lib
+    HINTS "$ENV{DEVKIT_LOCATION}/lib"
+)
+target_link_libraries(${MY_NAME} PUBLIC ${FIND_LIBRARY_MAYA})
+
+
+target_link_libraries(${MY_NAME} PUBLIC TFG)
+
+add_precompiled_header(${MY_NAME} stdafx.h)

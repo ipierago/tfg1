@@ -29,7 +29,11 @@ void TFG_ThreadGlobals_destroy(TFG_ThreadGlobals *const in_this);
 
 TFG_Globals::TFG_Globals()
 {
-    std_level_global = TFG_Level_Warning;
+#ifdef _DEBUG
+	std_level_global = TFG_Level_Debug;
+#else
+	std_level_global = TFG_Level_Warning;
+#endif
 }
 
 TFG_Globals::~TFG_Globals()
