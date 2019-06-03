@@ -1,4 +1,8 @@
 #include "stdafx.h"
+#include <TFG/TFG.h>
+
+TFG_FILE_SETUP();
+
 //-
 // ==========================================================================
 // Copyright 1995,2006,2008 Autodesk, Inc. All rights reserved.
@@ -273,7 +277,8 @@ MStatus sampleCmd::doIt(const MArgList &args)
 //
 MStatus initializePlugin(MObject obj)
 {
-	OutputDebugString("initializePlugin()\n");
+	TFG_Init();
+	TFG_DEBUG("initializePlugin()");
 
     MStatus status;
 
@@ -290,10 +295,12 @@ MStatus initializePlugin(MObject obj)
 
 MStatus uninitializePlugin(MObject obj)
 {
-	OutputDebugString("uninitializePlugin()\n");
+	TFG_DEBUG("uninitializePlugin()");
 
     MStatus status;
     MFnPlugin plugin(obj);
+
+	TFG_Deinit();
 
     status = plugin.deregisterCommand("sampleCmd");
     if (!status)

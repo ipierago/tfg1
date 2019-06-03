@@ -5,6 +5,7 @@ set(SOURCE
   Foo.cpp
   MyOtherObject.cpp
   IMyOtherObject.cpp
+  stdafx.cpp
 )
 
 set(HEADERS
@@ -12,8 +13,9 @@ set(HEADERS
   MyObject.h
   MyOtherObject.h
   IMyOtherObject.h
+  stdafx.h
 )
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})
 
-add_precompiled_header(${MY_NAME} Foo.h)
+add_precompiled_header(${MY_NAME} stdafx.h)

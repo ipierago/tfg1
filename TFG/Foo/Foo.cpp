@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Foo.h"
 
 namespace TFG
