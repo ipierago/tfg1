@@ -118,7 +118,7 @@ VOID CALLBACK TCPConnection::io_completion_callback(PTP_CALLBACK_INSTANCE in_ptp
 		TFG_ASSERT(in_ptp_io == tcpConnectionPtr->ptp_io);
 		in_ptp_io;
 		TFG_Result const hr = HRESULT_FROM_WIN32(in_io_result);
-		tcpConnectionPtr->on_recv_packet(net_packet_p, hr, in_num_byte_transfered_p);
+		tcpConnectionPtr->on_recv_packet(net_packet_p, hr, static_cast<uint32_t>(in_num_byte_transfered_p));
 	}
 	else
 	{
@@ -128,13 +128,13 @@ VOID CALLBACK TCPConnection::io_completion_callback(PTP_CALLBACK_INSTANCE in_ptp
 		TFG_ASSERT(net_overlapped_ex_p == net_packet_p->GetOverlappedExPtr());
 		TFG_ASSERT(in_ptp_io == tcpConnectionPtr->ptp_io);
 		TFG_Result const hr = HRESULT_FROM_WIN32(in_io_result);
-		tcpConnectionPtr->on_send_complete(net_packet_p, hr, in_num_byte_transfered_p);
+		tcpConnectionPtr->on_send_complete(net_packet_p, hr, static_cast<uint32_t>(in_num_byte_transfered_p));
 	}
 
 	TFG_FUNC_EXIT("");
 }
 
-void TCPConnection::on_queued_completion_status(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, uint32_t const in_completion_key, LPOVERLAPPED const in_overlapped_p)
+void TCPConnection::on_queued_completion_status(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, ULONG_PTR const in_completion_key, LPOVERLAPPED const in_overlapped_p)
 {
 	TFG_FUNC_ENTER();
 	UNREFERENCED_PARAMETER(in_completion_key);

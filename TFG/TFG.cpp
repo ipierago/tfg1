@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TFG.h"
 
 typedef struct TFG_ThreadGlobals

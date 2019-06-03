@@ -33,7 +33,7 @@ public:
 	TFG_Result SendPacket(PacketPtr const in_net_packet, const struct sockaddr_in *const in_sockaddr_in_p);
 
 	SOCKET GetSocket() { return m_socket; }
-	void OnQueuedCompletionStatus(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, uint32_t const in_completion_key, LPOVERLAPPED const in_overlapped_p);
+	void OnQueuedCompletionStatus(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, ULONG_PTR const in_completion_key, LPOVERLAPPED const in_overlapped_p);
 
 private:
 	UDPSocket();

@@ -108,7 +108,7 @@ VOID CALLBACK TCPAcceptor::io_completion_callback(PTP_CALLBACK_INSTANCE in_ptp_c
 	TFG_FUNC_EXIT("");
 }
 
-void TCPAcceptor::on_queued_completion_status(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, uint32_t const in_completion_key, LPOVERLAPPED const in_overlapped_p)
+void TCPAcceptor::on_queued_completion_status(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, ULONG_PTR const in_completion_key, LPOVERLAPPED const in_overlapped_p)
 {
 	TFG_FUNC_ENTER();
 	UNREFERENCED_PARAMETER(in_completion_key);

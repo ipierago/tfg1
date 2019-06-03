@@ -173,7 +173,7 @@ uint32_t Packet::GetData(void *const in_dest_p, uint32_t const in_capacity)
 	TFG_FUNC_ENTER();
 	uint32_t num_bytes_copied = 0;
 
-	uint32_t const wsabuf_count = wsabuf_vec.size();
+	uint32_t const wsabuf_count = static_cast<uint32_t>(wsabuf_vec.size());
 	uint32_t wsabuf_index = 0;
 	while ((wsabuf_index < wsabuf_count) && (num_bytes_copied < in_capacity))
 	{

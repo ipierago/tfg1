@@ -529,7 +529,7 @@ TEST_F(NetNT_Test, TCP_LoopbackEchoSimple)
 			// Send test packet
 			TFG::NetNT::PacketPtr const packetPtr = TFG::NetNT::Packet::Create();
 			char const *const stringPtr = "this is a test";
-			uint32_t const stringLen = strlen(stringPtr);
+			uint32_t const stringLen = (uint32_t)strlen(stringPtr);
 			uint32_t const charArraySize = stringLen + 1;
 			uint32_t const rvAppendData = packetPtr->AppendData(stringPtr, charArraySize);
 			TFG_Result const rSendPacket = tcpConnectionPtr->SendPacket(packetPtr);

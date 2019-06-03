@@ -140,7 +140,7 @@ VOID CALLBACK UDPSocket::IoCompletionCallback(PTP_CALLBACK_INSTANCE in_ptp_callb
 		TFG_ASSERT(in_ptp_io == in_this->m_ptpIo);
 		in_ptp_io;
 		TFG_Result const hr = HRESULT_FROM_WIN32(in_io_result);
-		(*in_this).OnRecvPacket(net_packet_p, hr, in_num_byte_transfered_p);
+		(*in_this).OnRecvPacket(net_packet_p, hr, static_cast<uint32_t>(in_num_byte_transfered_p));
 	}
 	else
 	{
@@ -150,13 +150,13 @@ VOID CALLBACK UDPSocket::IoCompletionCallback(PTP_CALLBACK_INSTANCE in_ptp_callb
 		TFG_ASSERT(net_overlapped_ex_p == net_packet_p->GetOverlappedExPtr());
 		TFG_ASSERT(in_ptp_io == in_this->m_ptpIo);
 		TFG_Result const hr = HRESULT_FROM_WIN32(in_io_result);
-		(*in_this).OnSendComplete(net_packet_p, hr, in_num_byte_transfered_p);
+		(*in_this).OnSendComplete(net_packet_p, hr, static_cast<uint32_t>(in_num_byte_transfered_p));
 	}
 
 	TFG_FUNC_EXIT("");
 }
 
-void UDPSocket::OnQueuedCompletionStatus(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, uint32_t const in_completion_key, LPOVERLAPPED const in_overlapped_p)
+void UDPSocket::OnQueuedCompletionStatus(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, ULONG_PTR const in_completion_key, LPOVERLAPPED const in_overlapped_p)
 {
 	TFG_FUNC_ENTER();
 	UNREFERENCED_PARAMETER(in_completion_key);

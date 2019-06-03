@@ -4,14 +4,20 @@ add_subdirectory(Bar)
 add_subdirectory(FooBar)
 
 #add_subdirectory(Call)
+if (WIN32)
 add_subdirectory(NetNT)
+endif()
+
 add_subdirectory(MayaPlugin)
+
 
 set(MY_NAME TFG)
 
 set(SOURCE
   error.cpp
   TFG.cpp
+  tfg_log.cpp
+  stdafx.cpp
 )
 
 set(HEADERS
@@ -20,11 +26,13 @@ set(HEADERS
   Tfg_fwd.h
   Sys.h
   TFG.h  
+  tfg_log.h
+  stdafx.h
 )
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})
 
-add_precompiled_header(${MY_NAME} TFG.h)
+add_precompiled_header(${MY_NAME} stdafx.h)
 
 if ((IOS AND BUILD_SHARED_LIBS))
   mylibrary_setupframework(${MY_NAME})

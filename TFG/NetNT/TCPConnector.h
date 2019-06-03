@@ -27,7 +27,7 @@ public:
 
 	static TFG_TypeId TypeId;
 
-	void on_queued_completion_status(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, uint32_t const in_completion_key, LPOVERLAPPED const in_overlapped_p);
+	void on_queued_completion_status(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, ULONG_PTR const in_completion_key, LPOVERLAPPED const in_overlapped_p);
 
 	static TCPConnectorPtr TCPConnector::Create(const char *const in_pszAddressLocal, int32_t const in_PortLocal, const char *const in_pszAddressRemote, int32_t const in_PortRemote, TCPConnector::CallbackI * const in_net_tcpconnector_callback_i);
 	void Destroy();

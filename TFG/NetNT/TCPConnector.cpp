@@ -79,7 +79,7 @@ VOID CALLBACK TCPConnector::io_completion_callback(PTP_CALLBACK_INSTANCE in_ptp_
 	TFG_FUNC_EXIT("");
 }
 
-void TCPConnector::on_queued_completion_status(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, uint32_t const in_completion_key, LPOVERLAPPED const in_overlapped_p)
+void TCPConnector::on_queued_completion_status(BOOL const in_rv_GetnQueuedCompletionStatus, uint32_t const in_num_bytes_transferred, ULONG_PTR const in_completion_key, LPOVERLAPPED const in_overlapped_p)
 {
 	TFG_FUNC_ENTER();
 	OverlappedExPtr const net_overlapped_ex_p = (OverlappedExPtr)in_overlapped_p;

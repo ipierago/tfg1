@@ -21,7 +21,7 @@ public:
     int32_t const *GetSockAddrInLenPtr() const { return &remote_sockaddr_in_len; }
     WSABUF const *GetWSABufArray(uint32_t *const out_array_size) const
     {
-        *out_array_size = wsabuf_vec.size();
+        *out_array_size = (uint32_t)wsabuf_vec.size();
         return (wsabuf_vec.empty() ? 0 : (WSABUF const *)&wsabuf_vec.at(0));
     }
     TFG_Result Resize(int32_t const size);
