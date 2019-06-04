@@ -25,6 +25,8 @@ namespace TFG
 	namespace Log
 	{
 		class PerModuleData;
+		class Globals;
+		class PerModuleData;
 
 		class Globals
 		{
@@ -32,6 +34,7 @@ namespace TFG
 			static Globals & Get();
 			void SetCurrentLevel(Level const);
 			Level GetCurrentLevel() const { return m_CurrentLevel; }
+			void OnPerModuleData(PerModuleData & perModuleData);
 		private:
 			Globals();
 			std::mutex mutex;
@@ -41,13 +44,16 @@ namespace TFG
 
 		class PerFileData
 		{
+			std::string const m_FileName;
+			std::string const m_TruncatedFileName;
 		public:
 			PerFileData(PerModuleData & perModuleData, const char *const fileNamePtr);
 			void UpdateLevel();
 			PerModuleData & m_PerModuleData;
-			const char *m_FileNamePtr;
 			Level m_CurrentLevel;
 			Level m_LocalLevel;
+			std::string const & GetFileName() const { return m_FileName; }
+			std::string const & GetTruncatedFileName() const { return m_TruncatedFileName; }
 		};
 
 		class PerModuleData
@@ -78,7 +84,9 @@ namespace TFG
 
 #define TFG_LOG_CHECK_LEVEL(_level) (GetTFGLogPerFileData().m_CurrentLevel >= _level)
 
-#define TFG_LOG_PRINTF_DEBUG(...) do {if (TFG_LOG_CHECK_LEVEL(TFG::Level_Debug)) TFG::Log::PrintF(TFG::Level_Debug, __FUNCTION__, __LINE__, GetTFGLogPerFileData(), __VA_ARGS__); } while (0);
+#define TFG_LOG_PRINTF(LOG_LEVEL, ...) do {if (TFG_LOG_CHECK_LEVEL(LOG_LEVEL)) TFG::Log::PrintF(LOG_LEVEL, __FUNCTION__, __LINE__, GetTFGLogPerFileData(), __VA_ARGS__); } while (0);
+#define TFG_LOG_PRINTF_DEBUG(...) TFG_LOG_PRINTF(TFG::Level_Debug, __VA_ARGS__)
+#define TFG_LOG_PRINTF_TRACE(...) TFG_LOG_PRINTF(TFG::Level_Trace, __VA_ARGS__)
 
 #define TFG_LOG_MODULE_SETUP(MODULE_NAME) \
 	TFG::Log::PerModuleData & GetTFGLogPerModuleData() { static TFG::Log::PerModuleData s_Instance(TFG::Log::Globals::Get(), MODULE_NAME); return s_Instance;}

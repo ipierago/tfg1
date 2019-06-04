@@ -16,8 +16,8 @@ uint32_t Foo::s_Param0;
 Foo::Foo(uint32_t const in_Param0)
 {
 	TFG_LOG_FUNCTION();
-	TFG::Log::PerFileData & perFileData = GetTFGLogPerFileData();
-	TFG_LOG_PRINTF_DEBUG("test test test");
+	TFG_LOG_PRINTF_DEBUG("");
+	TFG_LOG_PRINTF_TRACE("");
     s_Param0 = in_Param0;
 }
 

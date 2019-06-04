@@ -6,7 +6,41 @@ namespace TFG
 
 	namespace Log
 	{
-		PerFileData::PerFileData(PerModuleData & perModuleData, const char *const fileNamePtr) : m_PerModuleData(perModuleData), m_FileNamePtr(fileNamePtr), m_LocalLevel(Level_Always)
+
+
+		namespace {
+			std::string TruncateFileName(const char * const fileNamePtr) {
+
+				size_t const s = strlen(fileNamePtr);
+				size_t const TRUNC_SIZE = 16;
+				size_t numPaddingSpaces = 0;
+				size_t offsetTruncatedFile = 0;
+				if (s <= TRUNC_SIZE) {
+					numPaddingSpaces = TRUNC_SIZE - s;
+					offsetTruncatedFile = 0;
+				}
+				else {
+					numPaddingSpaces = 0;
+					size_t const b1 = (s % 16);
+					size_t const b2 = s - b1;
+					size_t const b3 = b2 - 16;
+					offsetTruncatedFile = b1 + b3;
+				}
+				const char * const fileNameEndPtr = fileNamePtr + offsetTruncatedFile;
+				std::string rv = std::string(fileNameEndPtr);
+				if (numPaddingSpaces > 0) {
+					rv.insert(0, numPaddingSpaces, ' ');
+				}
+#if 0
+				if (s > TRUNC_SIZE) {
+					rv[0] = rv[1] = rv[2] = '.';
+				}
+#endif
+				return rv;
+			}
+		}
+
+		PerFileData::PerFileData(PerModuleData & perModuleData, const char *const fileNamePtr) : m_PerModuleData(perModuleData), m_FileName(fileNamePtr), m_TruncatedFileName(TruncateFileName(fileNamePtr)), m_LocalLevel(Level_Always)
 		{
 			perModuleData.OnPerFileData(*this);
 			UpdateLevel();
@@ -17,7 +51,10 @@ namespace TFG
 			m_CurrentLevel = std::max(m_LocalLevel, m_PerModuleData.m_CurrentLevel);
 		}
 
-		PerModuleData::PerModuleData(Globals & globals, const char * const namePtr) : m_Globals(globals), m_LocalLevel(Level_Always), m_NamePtr(namePtr) {}
+		PerModuleData::PerModuleData(Globals & globals, const char * const namePtr) : m_Globals(globals), m_LocalLevel(Level_Always), m_NamePtr(namePtr) { 
+			m_Globals.OnPerModuleData(*this);
+			UpdateLevel(); 
+		}
 
 		void PerModuleData::OnPerFileData(PerFileData & perFileData) {
 			std::unique_lock<std::mutex> _unique_lock(m_Mutex);
@@ -46,6 +83,11 @@ namespace TFG
 #else
 			SetCurrentLevel(Level_Warning);
 #endif
+		}
+
+		void Globals::OnPerModuleData(PerModuleData & perModuleData) {
+			std::unique_lock<std::mutex> _unique_lock(mutex);
+			m_PerModuleDataArray.push_back(&perModuleData);
 		}
 
 		void Init()
@@ -184,7 +226,8 @@ namespace TFG
 		int32_t sprintf_header(Level const level, const char *const functionNamePtr, const int32_t lineNumber, TFG::Log::PerFileData & perFileData, char *const in_buffer, size_t const in_buffer_count)
 		{
 			uint32_t this_thread_id = TFG_GetCurrentThreadId();
-			int32_t const rv = TFG_sprintf_s(in_buffer, in_buffer_count, "T0x%08lx (%s) %s: ", this_thread_id, LevelToHeaderString(level), functionNamePtr);
+			
+			int32_t const rv = TFG_sprintf_s(in_buffer, in_buffer_count, "T0x%08lx (%s) \"%s\":%-3d:%s: ", this_thread_id, LevelToHeaderString(level), perFileData.GetTruncatedFileName().c_str(), lineNumber, functionNamePtr);
 			return rv;
 		}
 
