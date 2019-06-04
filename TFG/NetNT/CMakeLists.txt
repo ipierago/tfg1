@@ -29,7 +29,8 @@ set(HEADERS
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})
 
-target_link_libraries(${MY_NAME} TFG)
+target_link_libraries(${MY_NAME} PUBLIC TFG)
+target_link_libraries(${MY_NAME} PUBLIC wsock32 ws2_32)
 
 add_precompiled_header(${MY_NAME} NetNT.h)
 
