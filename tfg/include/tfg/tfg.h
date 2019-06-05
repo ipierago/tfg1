@@ -3,6 +3,7 @@
 #include "TFG_fwd.h"
 #include "djb2.h"
 #include "error.h"
+#include "log.h"
 
 //#define TFG_DISABLE
 //#define TFG_ASSERT_DISABLE

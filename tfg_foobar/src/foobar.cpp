@@ -7,7 +7,6 @@
 #include <tfg/bar/bar.h>
 #include <tfg/bar/myobject.h>
 
-#include <tfg/log/log.h>
 
 namespace TFG
 {

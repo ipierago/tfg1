@@ -22,6 +22,6 @@ target_include_directories(${MY_NAME}
         PRIVATE src include/tfg/foo
         PUBLIC include)
 
-target_link_libraries(${MY_NAME} tfg tfg_log)
+target_link_libraries(${MY_NAME} tfg)
 
 add_precompiled_header(${MY_NAME} stdafx.h)

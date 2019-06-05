@@ -1,5 +1,4 @@
 #include "Bar.h"
-#include <tfg/log/log.h>
 
 TFG_LOG_MODULE_SETUP("tfg_bar")
 
