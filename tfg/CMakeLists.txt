@@ -1,23 +1,27 @@
 set(MY_NAME tfg)
 
 set(SOURCE
-  error.cpp
-  tfg.cpp
-  tfg_log.cpp
+  src/error.cpp
+  src/tfg.cpp
+  src/tfg_log.cpp
   stdafx.cpp
 )
 
 set(HEADERS
-  djb2.h
-  error.h
-  tfg_fwd.h
-  sys.h
-  tfg.h  
-  tfg_log.h
-  stdafx.h
+  include/tfg/djb2.h
+  include/tfg/error.h
+  include/tfg/tfg_fwd.h
+  include/tfg/sys.h
+  include/tfg/tfg.h  
+  include/tfg/tfg_log.h
+  src/stdafx.h
 )
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})
+
+target_include_directories(${MY_NAME}
+        PRIVATE src include/tfg
+        PUBLIC include)
 
 add_precompiled_header(${MY_NAME} stdafx.h)
 
@@ -26,8 +30,6 @@ if ((IOS AND BUILD_SHARED_LIBS))
 endif()
 
 #if (WIN32)
-#	target_link_libraries(${MY_NAME} PUBLIC wsock32 ws2_32)
-#
 #	if("${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
 #		# Win64 stuff
 #	else()
