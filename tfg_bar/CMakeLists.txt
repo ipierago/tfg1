@@ -16,4 +16,4 @@ target_include_directories(${MY_NAME}
         PRIVATE src include/tfg/bar
         PUBLIC include)
 
-target_link_libraries(${MY_NAME} tfg)
+target_link_libraries(${MY_NAME} tfg tfg_log)

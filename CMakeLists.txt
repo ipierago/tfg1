@@ -25,6 +25,7 @@ add_subdirectory(thirdparty/googletest)
 
 # subdirectories
 add_subdirectory(tfg)
+add_subdirectory(tfg_log)
 add_subdirectory(tfg_foo)
 add_subdirectory(tfg_bar)
 add_subdirectory(tfg_foobar)

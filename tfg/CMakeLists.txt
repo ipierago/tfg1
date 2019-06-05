@@ -3,7 +3,6 @@ set(MY_NAME tfg)
 set(SOURCE
   src/error.cpp
   src/tfg.cpp
-  src/tfg_log.cpp
   stdafx.cpp
 )
 
@@ -13,7 +12,6 @@ set(HEADERS
   include/tfg/tfg_fwd.h
   include/tfg/sys.h
   include/tfg/tfg.h  
-  include/tfg/tfg_log.h
   src/stdafx.h
 )
 

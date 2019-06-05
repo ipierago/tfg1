@@ -1,3 +1,2 @@
 #pragma once
-#include "Foo.h"
-#include <TFG/TFG_log.h>
+#include <tfg/log/log.h>

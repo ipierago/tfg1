@@ -1,13 +1,13 @@
-#include "FooBar.h"
+#include "foobar.h"
 
-#include <TFG/Foo/Foo.h>
-#include <TFG/Foo/MyObject.h>
-#include <TFG/Foo/IMyOtherObject.h>
+#include <tfg/foo/foo.h>
+#include <tfg/foo/myobject.h>
+#include <tfg/foo/imyotherobject.h>
 
-#include <TFG/Bar/Bar.h>
-#include <TFG/Bar/MyObject.h>
+#include <tfg/bar/bar.h>
+#include <tfg/bar/myobject.h>
 
-#include <TFG/TFG_log.h>
+#include <tfg/log/log.h>
 
 namespace TFG
 {

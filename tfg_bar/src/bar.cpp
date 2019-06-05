@@ -1,7 +1,7 @@
 #include "Bar.h"
-#include <TFG/TFG_log.h>
+#include <tfg/log/log.h>
 
-TFG_LOG_MODULE_SETUP("TFG_Bar")
+TFG_LOG_MODULE_SETUP("tfg_bar")
 
 TFG_LOG_FILE_SETUP()
 

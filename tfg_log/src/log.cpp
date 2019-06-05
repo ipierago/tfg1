@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "TFG_log.h"
+#include "tfg/log/log.h"
 
 namespace TFG
 {
