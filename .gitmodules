@@ -1,6 +1,6 @@
-[submodule "polly"]
-	path = polly
+[submodule "thirdparty/polly"]
+	path = thirdparty/polly
 	url = https://github.com/ruslo/polly.git
-[submodule "googletest"]
-	path = googletest
+[submodule "thirdparty/googletest"]
+	path = thirdparty/googletest
 	url = https://github.com/google/googletest.git
