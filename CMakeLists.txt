@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 # Extensions
-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
-include(PrecompiledHeader)
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(add_precompiled_header)
 
-project (TFG)
+project (tfg)
 
 # Build shared libs by default
 set(BUILD_SHARED_LIBS TRUE)
@@ -24,5 +24,9 @@ include_directories ("${PROJECT_SOURCE_DIR}")
 add_subdirectory(googletest)
 
 # subdirectories
-add_subdirectory(TFG)
-
+add_subdirectory(tfg)
+add_subdirectory(tfg_foo)
+add_subdirectory(tfg_bar)
+add_subdirectory(tfg_foobar)
+add_subdirectory(tfg_mayaplugin)
+add_subdirectory(tfg_netnt)

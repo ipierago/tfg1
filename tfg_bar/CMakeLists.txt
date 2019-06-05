@@ -1,17 +1,19 @@
-set(MY_NAME TFG_Bar)
+set(MY_NAME tfg_bar)
 
 set(SOURCE
-  Bar.cpp
-  MyObject.cpp
+  src/bar.cpp
+  src/myobject.cpp
 )
 
 set(HEADERS
-  Bar.h
-  MyObject.h
+  include/tfg/bar/bar.h
+  include/tfg/bar/myobject.h
 )
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})
 
-target_link_libraries(${MY_NAME} TFG)
+target_include_directories(${MY_NAME}
+        PRIVATE src include/tfg/bar
+        PUBLIC include)
 
-add_precompiled_header(${MY_NAME} Bar.h)
+target_link_libraries(${MY_NAME} tfg)

@@ -1,16 +1,16 @@
 
-set(MY_NAME TFG_MayaPlugin)
+set(MY_NAME tfg_mayaplugin)
 
 set(SOURCE
-  mllmain.cpp
+  src/mllmain.cpp
   stdafx.cpp
 )
 
 set(HEADERS
-  stdafx.h
+  src/stdafx.h
 )
 
-include_directories ("$ENV{DEVKIT_LOCATION}/include")
+include_directories (src "$ENV{DEVKIT_LOCATION}/include")
 
 add_library (${MY_NAME} ${SOURCE} ${HEADERS})
 
@@ -25,9 +25,8 @@ target_link_libraries(${MY_NAME} PUBLIC ${FIND_LIBRARY_OPENMAYARENDER})
 find_library(FIND_LIBRARY_FOUNDATION NAMES Foundation HINTS "$ENV{DEVKIT_LOCATION}/lib" )
 target_link_libraries(${MY_NAME} PUBLIC ${FIND_LIBRARY_FOUNDATION})
 
-target_link_libraries(${MY_NAME} PUBLIC TFG)
+target_link_libraries(${MY_NAME} PUBLIC tfg)
 
 set_target_properties(${MY_NAME} PROPERTIES SUFFIX ".mll")
 
 add_precompiled_header(${MY_NAME} stdafx.h)
-

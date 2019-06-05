@@ -1,21 +1,8 @@
-# Subdirectories
-add_subdirectory(Foo)
-add_subdirectory(Bar)
-add_subdirectory(FooBar)
-
-#add_subdirectory(Call)
-if (WIN32)
-add_subdirectory(NetNT)
-endif()
-
-add_subdirectory(MayaPlugin)
-
-
-set(MY_NAME TFG)
+set(MY_NAME tfg)
 
 set(SOURCE
   error.cpp
-  TFG.cpp
+  tfg.cpp
   tfg_log.cpp
   stdafx.cpp
 )
@@ -23,9 +10,9 @@ set(SOURCE
 set(HEADERS
   djb2.h
   error.h
-  Tfg_fwd.h
-  Sys.h
-  TFG.h  
+  tfg_fwd.h
+  sys.h
+  tfg.h  
   tfg_log.h
   stdafx.h
 )

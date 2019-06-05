@@ -1,25 +1,26 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-set (MY_NAME TFG_FooBar)
+set (MY_NAME tfg_foobar)
 
 set(SOURCE
-  FooBar.cpp
+  src/foobar.cpp
 )
 
 if (WIN32)
   set(SOURCE ${SOURCE}
-    main.cpp
+    src/main.cpp
   )
 endif()
 
 set(HEADERS
-  FooBar.h
+  src/foobar.h
 )
 
 add_executable(${MY_NAME} ${SOURCE} ${HEADERS})
 
-target_link_libraries(${MY_NAME} TFG)
-target_link_libraries(${MY_NAME} TFG_Foo)
-target_link_libraries(${MY_NAME} TFG_Bar)
+target_include_directories(${MY_NAME}
+        PRIVATE src
+        PUBLIC include)
 
-add_precompiled_header(${MY_NAME} FooBar.h)
+target_link_libraries(${MY_NAME} tfg tfg_foo tfg_bar)
+

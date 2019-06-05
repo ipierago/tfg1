@@ -1,3 +1,1 @@
-cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../polly/vs-15-2017.cmake -H.. -B./ -G "Visual Studio 15 2017" ../
-
+cmake -DCMAKE_TOOLCHAIN_FILE=./polly/vs-16-2019-win64.cmake -H. -Bbuild -G "Visual Studio 16 2019" -A x64
