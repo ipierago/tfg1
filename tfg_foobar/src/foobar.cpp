@@ -36,10 +36,10 @@ int Main()
 
 	CreateAndDestroyObjects();
 
-	TFG::Log::SetGlobalLevel(TFG::Level_Trace);
+	TFG::Log::SetGlobalLevel(TFG::Log::Level_Trace);
 	CreateAndDestroyObjects();
 
-	TFG::Log::SetGlobalLevel(TFG::Level_Warning);
+	TFG::Log::SetGlobalLevel(TFG::Log::Level_Warning);
 	CreateAndDestroyObjects();
 
     TFG_Deinit();

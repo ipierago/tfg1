@@ -23,7 +23,3 @@ add_precompiled_header(${MY_NAME} stdafx.h)
 if ((IOS AND BUILD_SHARED_LIBS))
   mylibrary_setupframework(${MY_NAME})
 endif()
-
-if (ANDROID)
-	target_link_libraries(${MY_NAME} PUBLIC android log)
-endif()

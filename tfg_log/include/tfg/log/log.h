@@ -3,27 +3,28 @@
 
 namespace TFG
 {
-	enum Level
-	{
-		Level_Always,
-
-		Level_Severe,
-		Level_Error,
-		Level_Warning,
-
-		Level_Notify,
-		Level_Info,
-
-		Level_Debug,
-		Level_Debug2,
-		Level_Trace,
-		Level_Trace2,
-
-		Level_Never
-	};
-
 	namespace Log
 	{
+		enum Level
+		{
+			Level_Always,
+
+			Level_Severe,
+			Level_Error,
+			Level_Warning,
+
+			Level_Notify,
+			Level_Info,
+
+			Level_Debug,
+			Level_Debug2,
+			Level_Trace,
+			Level_Trace2,
+
+			Level_Never
+		};
+
+
 		class PerModuleData;
 		class Globals;
 		class PerModuleData;
@@ -85,8 +86,8 @@ namespace TFG
 #define TFG_LOG_CHECK_LEVEL(_level) (GetTFGLogPerFileData().m_CurrentLevel >= _level)
 
 #define TFG_LOG_PRINTF(LOG_LEVEL, ...) do {if (TFG_LOG_CHECK_LEVEL(LOG_LEVEL)) TFG::Log::PrintF(LOG_LEVEL, __FUNCTION__, __LINE__, GetTFGLogPerFileData(), __VA_ARGS__); } while (0);
-#define TFG_LOG_PRINTF_DEBUG(...) TFG_LOG_PRINTF(TFG::Level_Debug, __VA_ARGS__)
-#define TFG_LOG_PRINTF_TRACE(...) TFG_LOG_PRINTF(TFG::Level_Trace, __VA_ARGS__)
+#define TFG_LOG_PRINTF_DEBUG(...) TFG_LOG_PRINTF(TFG::Log::Level_Debug, __VA_ARGS__)
+#define TFG_LOG_PRINTF_TRACE(...) TFG_LOG_PRINTF(TFG::Log::Level_Trace, __VA_ARGS__)
 
 #define TFG_LOG_MODULE_SETUP(MODULE_NAME) \
 	TFG::Log::PerModuleData & GetTFGLogPerModuleData() { static TFG::Log::PerModuleData s_Instance(TFG::Log::Globals::Get(), MODULE_NAME); return s_Instance;}
