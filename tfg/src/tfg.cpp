@@ -40,14 +40,14 @@ TFG_Globals::TFG_Globals()
 TFG_Globals::~TFG_Globals()
 {
     std::unique_lock<std::mutex> _unique_lock(mutex);
-    uint32_t const size_per_file_data_std_ptrvec = per_file_data_std_ptrvec.size();
-    for (uint32_t i = 0; i < size_per_file_data_std_ptrvec; ++i)
+    auto const size_per_file_data_std_ptrvec = per_file_data_std_ptrvec.size();
+    for (auto i = 0; i < size_per_file_data_std_ptrvec; ++i)
     {
         TFG_PerFileData *const std_per_file_data_p = per_file_data_std_ptrvec.at(i);
         TFG_PerFileData_Deinit(std_per_file_data_p);
     }
-    uint32_t const size_thread_globals_std_ptrvec = TFG_ThreadGlobals_std_ptrvec.size();
-    for (uint32_t i = 0; i < size_thread_globals_std_ptrvec; ++i)
+    auto const size_thread_globals_std_ptrvec = TFG_ThreadGlobals_std_ptrvec.size();
+    for (auto i = 0; i < size_thread_globals_std_ptrvec; ++i)
     {
         TFG_ThreadGlobals *const TFG_ThreadGlobals_p = TFG_ThreadGlobals_std_ptrvec.at(i);
         TFG_ThreadGlobals_destroy(TFG_ThreadGlobals_p);
@@ -68,8 +68,8 @@ void TFG_SetGlobalLevelLog(TFG_Level const in_level)
     TFG_Globals &globals = TFG_Globals_get();
     std::unique_lock<std::mutex> _unique_lock(globals.mutex);
     globals.std_level_global = in_level;
-    uint32_t const size = globals.per_file_data_std_ptrvec.size();
-    for (uint32_t i = 0; i < size; ++i)
+    auto const size = globals.per_file_data_std_ptrvec.size();
+    for (auto i = 0; i < size; ++i)
     {
         TFG_PerFileDataPtr const std_per_file_data_p = globals.per_file_data_std_ptrvec.at(i);
         std_per_file_data_p->current_std_level = std::max(std_per_file_data_p->file_std_level, globals.std_level_global);
