@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TFG_fwd.h"
-#include "Sys.h"
+#include "tfg_fwd.h"
+#include "sys.h"
 
 #define TFG_DJB2_STEP(_HASH, _C) ((_HASH * 33) ^ _C)
 //#define TFG_DJB2_STEP(_HASH, _C) (((_HASH << 5) + _HASH) ^ _C)

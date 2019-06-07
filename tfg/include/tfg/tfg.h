@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TFG_fwd.h"
+#include "tfg_fwd.h"
 #include "djb2.h"
 #include "error.h"
 #include "log.h"

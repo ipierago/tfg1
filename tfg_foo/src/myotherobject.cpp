@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Foo.h"
-#include "MyOtherObject.h"
+#include "foo.h"
+#include "myotherobject.h"
 
 namespace TFG
 {

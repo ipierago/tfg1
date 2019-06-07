@@ -1,5 +1,5 @@
 #pragma once
-#include <TFG/Foo/Foo.h>
+#include <tfg/foo/foo.h>
 
 namespace TFG
 {

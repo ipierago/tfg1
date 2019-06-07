@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include <TFG/TFG.h>
+#include <tfg/tfg.h>
 
 TFG_FILE_SETUP();
 

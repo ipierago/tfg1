@@ -2,7 +2,7 @@
 #ifdef WIN32
 
 #include <Call/call_fwd.h>
-#include <Sys/Sys.h>
+#include <Sys/sys.h>
 
 CALL_API HANDLE call_CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset, BOOL bInitialState, LPCSTR lpName);
 CALL_API BOOL call_CloseHandle(HANDLE hObject);

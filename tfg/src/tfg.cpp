@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "TFG.h"
+#include "tfg.h"
 
 typedef struct TFG_ThreadGlobals
 {

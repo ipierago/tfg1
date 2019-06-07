@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Foo.h"
-#include "IMyOtherObject.h"
-#include "MyOtherObject.h"
+#include "foo.h"
+#include "imyotherobject.h"
+#include "myotherobject.h"
 
 namespace TFG
 {

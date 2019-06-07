@@ -1,2 +1,2 @@
 #pragma once
-#include <TFG/TFG.h>
+#include <tfg/tfg.h>

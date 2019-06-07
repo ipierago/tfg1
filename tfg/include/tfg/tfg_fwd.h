@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Sys.h"
+#include "sys.h"
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (P)

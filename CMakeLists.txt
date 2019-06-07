@@ -12,6 +12,9 @@ set(BUILD_SHARED_LIBS TRUE)
 # On Windows builds use cmake magic to avoid __declpec
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
+# OSX - supress warning about rpath
+cmake_policy(SET CMP0042 NEW)
+
 ## Make sure shared libraries end up next to executables
 ## TODO: Is this needed with static link?
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Foo.h"
+#include "foo.h"
 
 TFG_LOG_MODULE_SETUP("TFG_Foo")
 

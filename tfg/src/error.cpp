@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "TFG.h"
+#include "tfg.h"
 #include "error.h"
 
 char const *TFG_GetErrorString(uint32_t const in_error_code)

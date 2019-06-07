@@ -1,4 +1,4 @@
-#include "Bar.h"
+#include "bar.h"
 
 TFG_LOG_MODULE_SETUP("tfg_bar")
 

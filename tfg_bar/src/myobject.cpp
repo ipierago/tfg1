@@ -1,5 +1,5 @@
-#include "Bar.h"
-#include "MyObject.h"
+#include "bar.h"
+#include "myobject.h"
 
 namespace TFG
 {
