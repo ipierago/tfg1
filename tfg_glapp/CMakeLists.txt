@@ -39,6 +39,8 @@ target_include_directories(${MY_NAME} PRIVATE src)
 if (WIN32)
 	target_link_libraries(${MY_NAME} PUBLIC ${FIND_LIBRARY_LIBEGL} ${FIND_LIBRARY_LIBGLESV2})
 	target_compile_definitions(${MY_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
+	add_custom_command(TARGET ${MY_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${FIND_DLL_LIBEGL} $<TARGET_FILE_DIR:${MY_NAME}>)
+	add_custom_command(TARGET ${MY_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${FIND_DLL_LIBGLESV2} $<TARGET_FILE_DIR:${MY_NAME}>)
 endif()
 
 if (ANDROID)
