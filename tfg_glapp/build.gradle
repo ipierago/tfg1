@@ -4,7 +4,7 @@ android {
     compileSdkVersion = 29
 
     defaultConfig {
-        applicationId = 'com.ianpieragostini.ClientAndroid'
+        applicationId = 'com.tfg.glapp'
         minSdkVersion 14
         targetSdkVersion 26
         versionCode = 1

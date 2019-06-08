@@ -141,15 +141,14 @@ namespace TFG
 			return ANDROID_LOG_UNKNOWN;
 		}
 #endif
-		static void _log_str(const char *const in_)
+		static void _log_str(Level const level, const char * const functionNamePtr, const char *const in_)
 		{
 #if defined(ANDROID)
-			TFG_ThreadGlobals *const TFG_ThreadGlobals_p = TFG_ThreadGlobals_Get();
-			android_LogPriority const logPriority = ConvertToAndroidLogPriority(TFG_ThreadGlobals_p->std_level);
-			__android_log_write(logPriority, TFG_ThreadGlobals_p->function_psz, in_);
+			android_LogPriority const logPriority = ConvertToAndroidLogPriority(level);
+			__android_log_write(logPriority, functionNamePtr, in_);
 #elif defined(WIN32)
 			OutputDebugStringA(in_);
-			//#elif defined(__APPLE__)
+//#elif defined(__APPLE__)
 #endif
 			printf("%s", in_);
 		}
@@ -237,7 +236,7 @@ namespace TFG
 			int32_t const headerLen = sprintf_header(level, functionNamePtr, lineNumber, perFileData, buf, sizeof(buf));
 			TFG_vsprintf_s(buf + headerLen, sizeof(buf) - headerLen, format, argList);
 			TFG_strcat_s(buf, sizeof(buf), "\n");
-			_log_str(buf);
+			_log_str(level, functionNamePtr, buf);
 		}
 
 		void PrintF(Level const level, const char *const functionNamePtr, const int32_t lineNumber, TFG::Log::PerFileData & perFileData, const char *const format, ...)
