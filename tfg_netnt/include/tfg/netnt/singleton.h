@@ -1,6 +1,6 @@
 #pragma once
-#include "NetNT.h"
-#include "ObjectTracker.h"
+#include "netnt.h"
+#include "objecttracker.h"
 
 namespace TFG
 {

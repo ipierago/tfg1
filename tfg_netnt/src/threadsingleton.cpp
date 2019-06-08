@@ -1,7 +1,8 @@
-#include "NetNT.h"
-#include "ThreadSingleton.h"
-#include "Packet.h"
-#include "Singleton.h"
+#include "stdafx.h"
+#include "netnt.h"
+#include "threadsingleton.h"
+#include "packet.h"
+#include "singleton.h"
 
 namespace TFG
 {

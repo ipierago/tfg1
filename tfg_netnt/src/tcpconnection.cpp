@@ -1,10 +1,11 @@
-#include "NetNT.h"
-#include "TCPConnection.h"
+#include "stdafx.h"
+#include "netnt.h"
+#include "tcpconnection.h"
 
-#include "ObjectTracker.h"
-#include "Singleton.h"
-#include "Packet.h"
-#include "OverlappedEx.h"
+#include "objecttracker.h"
+#include "singleton.h"
+#include "packet.h"
+#include "overlappedex.h"
 
 TFG_FILE_SETUP()
 

@@ -1,11 +1,12 @@
-#include "NetNT.h"
-#include "ObjectTracker.h"
-#include "Packet.h"
-#include "UDPSocket.h"
-#include "ThreadSingleton.h"
-#include "TCPConnection.h"
-#include "TCPConnector.h"
-#include "TCPAcceptor.h"
+#include "stdafx.h"
+#include "netnt.h"
+#include "objecttracker.h"
+#include "packet.h"
+#include "udpsocket.h"
+#include "threadsingleton.h"
+#include "tcpconnection.h"
+#include "tcpconnector.h"
+#include "tcpacceptor.h"
 
 TFG_FILE_SETUP()
 

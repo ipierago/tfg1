@@ -1,8 +1,9 @@
-#include "NetNT.h"
+#include "stdafx.h"
+#include "netnt.h"
 #include "StreamToDGram.h"
 
-#include "Packet.h"
-#include "Singleton.h"
+#include "packet.h"
+#include "singleton.h"
 
 TFG_FILE_SETUP()
 

@@ -1,11 +1,12 @@
-#include "NetNT.h"
-#include "Singleton.h"
-#include "OverlappedEx.h"
-#include "UDPSocket.h"
-#include "Packet.h"
-#include "TCPAcceptor.h"
-#include "TCPConnection.h"
-#include "TCPConnector.h"
+#include "stdafx.h"
+#include "netnt.h"
+#include "singleton.h"
+#include "overlappedex.h"
+#include "udpsocket.h"
+#include "packet.h"
+#include "tcpacceptor.h"
+#include "tcpconnection.h"
+#include "tcpconnector.h"
 
 TFG_FILE_SETUP()
 

@@ -1,12 +1,12 @@
-#include <TFG/NetNT/NetNT.h>
+#include <tfg/netnt/netnt.h>
 #include <gtest/gtest.h>
 
-#include <TFG/NetNT/Packet.h>
-#include <TFG/NetNT/UDPSocket.h>
-#include <TFG/NetNT/TCPAcceptor.h>
-#include <TFG/NetNT/TCPConnector.h>
-#include <TFG/NetNT/TCPConnection.h>
-#include <TFG/NetNT/StreamToDGram.h>
+#include <tfg/netnt/packet.h>
+#include <tfg/netnt/udpsocket.h>
+#include <tfg/netnt/tcpacceptor.h>
+#include <tfg/netnt/tcpconnector.h>
+#include <tfg/netnt/tcpconnection.h>
+#include <tfg/netnt/streamtodgram.h>
 
 TFG_FILE_SETUP();
 

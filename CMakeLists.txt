@@ -54,9 +54,16 @@ add_subdirectory(thirdparty/googletest)
 
 # subdirectories
 add_subdirectory(tfg)
+
 add_subdirectory(tfg_foo)
 add_subdirectory(tfg_bar)
 add_subdirectory(tfg_foobar)
-add_subdirectory(tfg_mayaplugin)
-add_subdirectory(tfg_netnt)
+
+if(WIN32)
+	add_subdirectory(tfg_netnt)
+	if(CMAKE_GENERATOR_PLATFORM STREQUAL "x64")
+		add_subdirectory(tfg_mayaplugin)
+	endif()
+endif()
+
 add_subdirectory(tfg_glapp)

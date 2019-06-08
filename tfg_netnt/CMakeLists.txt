@@ -38,6 +38,6 @@ target_include_directories(${MY_NAME}
 target_link_libraries(${MY_NAME} PUBLIC tfg)
 target_link_libraries(${MY_NAME} PUBLIC wsock32 ws2_32)
 
-#add_precompiled_header(${MY_NAME} stdafx.h)
+add_precompiled_header(${MY_NAME} stdafx.h)
 
 add_subdirectory(tests)

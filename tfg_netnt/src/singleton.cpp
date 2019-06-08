@@ -1,6 +1,7 @@
-#include "NetNT.h"
-#include "Singleton.h"
-#include "ThreadSingleton.h"
+#include "stdafx.h"
+#include "netnt.h"
+#include "singleton.h"
+#include "threadsingleton.h"
 
 TFG_FILE_SETUP()
 

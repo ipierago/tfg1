@@ -1,6 +1,6 @@
 #pragma once
-#include "NetNT.h"
-#include "OverlappedEx.h"
+#include "netnt.h"
+#include "overlappedex.h"
 
 namespace TFG
 {

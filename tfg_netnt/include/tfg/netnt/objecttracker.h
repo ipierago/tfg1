@@ -1,5 +1,5 @@
 #pragma once
-#include "NetNT.h"
+#include "netnt.h"
 
 namespace TFG
 {
