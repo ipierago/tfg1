@@ -40,4 +40,6 @@ target_link_libraries(${MY_NAME} PUBLIC wsock32 ws2_32)
 
 add_precompiled_header(${MY_NAME} stdafx.h)
 
+if (NOT TFG_DISABLE_GTEST)
 add_subdirectory(tests)
+endif()

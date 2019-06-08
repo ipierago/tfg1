@@ -29,10 +29,17 @@ if (ANDROID)
   set(SOURCE ${SOURCE}
     src/esutil_android.c
 	src/android_main.c
+    ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c
   )
 endif()
 
-add_executable(${MY_NAME} ${SOURCE} ${HEADERS})
+message(${ANDROID_NDK}"/sources/android/native_app_glue/android_native_app_glue.c")
+
+if (ANDROID)
+	add_library(${MY_NAME} ${SOURCE} ${HEADERS})
+else()
+	add_executable(${MY_NAME} ${SOURCE} ${HEADERS})
+endif()
 
 target_include_directories(${MY_NAME} PRIVATE src)
 
@@ -45,6 +52,11 @@ endif()
 
 if (ANDROID)
 	target_include_directories(${MY_NAME} PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
+
+	# Export ANativeActivity_onCreate(),
+	# Refer to: https://github.com/android-ndk/ndk/issues/381.
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
+
 	find_library(FIND_LIBRARY_ANDROID android)
 	find_library(FIND_LIBRARY_LOG log)
 	find_library(FIND_LIBRARY_EGL EGL)

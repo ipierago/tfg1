@@ -49,15 +49,23 @@ if (WIN32)
 #	endif()
 endif()  # WIN32
 
+if (ANDROID)
+set(TFG_DISABLE_GTEST 1)
+endif()
+
+if (NOT TFG_DISABLE_GTEST)
 # dependencies subdirectories
 add_subdirectory(thirdparty/googletest)
+endif()
 
 # subdirectories
 add_subdirectory(tfg)
 
 add_subdirectory(tfg_foo)
 add_subdirectory(tfg_bar)
+if (NOT ANDROID)
 add_subdirectory(tfg_foobar)
+endif()
 
 if(WIN32)
 	add_subdirectory(tfg_netnt)
