@@ -76,7 +76,6 @@ output.json
 obj/
 .externalNativeBuild
 
-
 .vscode/
 .project
 .settings/
@@ -90,3 +89,5 @@ build.ios/
 build.osx/
 
 deps/
+
+.cxx/
